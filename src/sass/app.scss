@@ -1,0 +1,19 @@
+@import "variable";
+@import "reset";
+@import "mixin";
+@import "seekbar";
+@import "musicplayer";
+@import "playlist";
+@import "scrollbar";
+
+
+body {
+  font-family: "Mulish", sans-serif;
+  background-color: #1e1e1e;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  user-select: none;
+}
