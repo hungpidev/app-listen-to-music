@@ -1,4 +1,5 @@
 import { RangeControl } from "./components/RangeControl.js";
+import { RippleEffect } from "./components/RippleEffect.js";
 import { Scrollbar } from "./components/Scrollbar.js";
 import { SmoothScroller } from "./components/SmoothScroller.js";
 import { musics } from "./data/musics.js";
@@ -16,6 +17,12 @@ const totalTimeElement = document.querySelector(".total-time");
 const playIcon = `<i class="fas fa-play icon__play"></i>`;
 const pauseIcon = `<i class="fas fa-pause icon__pause"></i>`;
 
+new RippleEffect(nextBtn);
+new RippleEffect(prevBtn);
+new RippleEffect(playBtn);
+new RippleEffect(repeatBtn);
+new RippleEffect(shuffleBtn);
+
 class MusicPlayer {
   constructor(songs, seekBar) {
     this.audio = new Audio();
@@ -26,6 +33,7 @@ class MusicPlayer {
     this.isRepeating = false;
     this.isShuffling = false;
     this.isDragging = false;
+    this.initSong();
     this.loadState();
   }
 
@@ -49,6 +57,15 @@ class MusicPlayer {
       `
       )
       .join("");
+
+    const items = document.querySelectorAll(".playlist__item");
+    items.forEach((item) => {
+      new RippleEffect(item, {
+        backgroundColor: "#2d2d2d",
+        scale: 3,
+        duration: 1500,
+      });
+    });
 
     playlistElement.addEventListener("click", (e) => {
       const item = e.target.closest(".playlist__item");
@@ -318,4 +335,4 @@ player.initSong();
 
 const playlistContainer = document.querySelector(".playlist");
 const playlist = document.querySelector(".playlist__list");
-const customScrollbar = new Scrollbar(playlistContainer, playlist);
+new Scrollbar(playlistContainer, playlist);

@@ -169,11 +169,8 @@ img {
   cursor: pointer;
   transition: all 0.3s linear;
 }
-.btn:active {
-  background-color: #ffffff;
-}
-.btn:active i {
-  color: #333;
+.btn i {
+  z-index: 99;
 }
 .btn.active {
   background-color: #ffffff;
@@ -224,6 +221,7 @@ img {
   user-select: none;
   border-radius: 50%;
   overflow: hidden;
+  z-index: 99;
 }
 .playlist__item-thumb img {
   width: 100%;
@@ -243,6 +241,7 @@ img {
   font-size: 16px;
   font-weight: bold;
   color: #fff;
+  z-index: 99;
 }
 .playlist__item-singer {
   overflow: hidden;
@@ -250,11 +249,13 @@ img {
   white-space: nowrap;
   font-size: 14px;
   color: #aaa;
+  z-index: 99;
 }
 .playlist__item-duration {
   font-size: 14px;
   color: #aaa;
   margin-left: auto;
+  z-index: 99;
 }
 
 .custom-scrollbar {
@@ -265,7 +266,8 @@ img {
   height: 100%;
   background-color: transparent;
   opacity: 0;
-  transition: opacity 0.3s linear;
+  visibility: hidden;
+  transition: opacity 1s linear;
   user-select: none;
 }
 
@@ -276,6 +278,9 @@ img {
   position: absolute;
   cursor: pointer;
   user-select: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s linear;
 }
 
 body {

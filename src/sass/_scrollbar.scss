@@ -6,7 +6,8 @@
   height: 100%;
   background-color: transparent;
   opacity: 0;
-  transition: opacity 0.3s linear;
+  visibility: hidden;
+  transition: opacity 1s linear;
   user-select: none;
 }
 
@@ -17,4 +18,7 @@
   position: absolute;
   cursor: pointer;
   user-select: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s linear;
 }

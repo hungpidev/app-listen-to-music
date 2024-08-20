@@ -55,7 +55,7 @@ export class Scrollbar {
 
       // Hide scrollbar after a delay
       clearTimeout(this.hideTimeout);
-      this.hideTimeout = setTimeout(() => this.hideScrollbar(), 1000);
+      this.hideTimeout = setTimeout(() => this.hideScrollbar(), 2000);
     });
 
     window.addEventListener("resize", () => {
@@ -66,11 +66,17 @@ export class Scrollbar {
 
   showScrollbar() {
     this.scrollbar.style.opacity = "1";
+    this.scrollbar.style.visibility = "visible";
+    this.thumb.style.opacity = "1";
+    this.thumb.style.visibility = "visible";
   }
 
   hideScrollbar() {
     if (!this.dragging) {
       this.scrollbar.style.opacity = "0";
+      this.scrollbar.style.visibility = "hidden";
+      this.thumb.style.opacity = "0";
+      this.thumb.style.visibility = "hidden";
     }
   }
 
@@ -100,6 +106,6 @@ export class Scrollbar {
   onDragEnd() {
     this.dragging = false;
     clearTimeout(this.hideTimeout);
-    this.hideTimeout = setTimeout(() => this.hideScrollbar(), 1000);
+    this.hideTimeout = setTimeout(() => this.hideScrollbar(), 2000);
   }
 }
