@@ -1,4 +1,5 @@
 import { RangeControl } from "./components/RangeControl.js";
+import { Scrollbar } from "./components/Scrollbar.js";
 import { SmoothScroller } from "./components/SmoothScroller.js";
 import { musics } from "./data/musics.js";
 
@@ -70,7 +71,7 @@ class MusicPlayer {
   }
 
   scrollActiveSongIntoView() {
-    const container = document.querySelector(".playlist");
+    const container = document.querySelector(".playlist__list");
     const activeSongElement = document.querySelector(".playlist__item.active");
     const scroller = new SmoothScroller(container);
     scroller.scrollToCenter(activeSongElement);
@@ -314,3 +315,7 @@ shuffleBtn.addEventListener("click", () => {
 });
 
 player.initSong();
+
+const playlistContainer = document.querySelector(".playlist");
+const playlist = document.querySelector(".playlist__list");
+const customScrollbar = new Scrollbar(playlistContainer, playlist);

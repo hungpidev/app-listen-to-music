@@ -1,3 +1,52 @@
+/* reset css */
+html {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+input,
+textarea,
+select,
+button {
+  outline: none;
+  font-weight: normal;
+}
+
+textarea {
+  resize: none;
+}
+
+input {
+  line-height: normal;
+}
+
+label,
+button {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/*  */
+
+
 body {
   font-family: "Mulish", sans-serif;
   background-color: #1e1e1e;
@@ -28,13 +77,13 @@ img {
 }
 
 .player-content {
-  padding: 20px;
+  padding: 10px;
   width: 430px;
 }
 
 .song-info {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 45px;
 }
 
 .song-image {
@@ -42,8 +91,7 @@ img {
   height: 300px;
   overflow: hidden;
   border-radius: 50%;
-  margin: 0 auto;
-  margin-bottom: 50px;
+  margin: 20px auto 20px;
   box-shadow: 0 4px 20px rgb(0 0 0 / 28%);
   position: relative;
 }
@@ -117,6 +165,7 @@ img {
 }
 
 .seek-bar-container {
+  padding: 0 5px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -124,9 +173,8 @@ img {
 
 .seek-bar {
   position: relative;
-  width: 320px;
+  width: 290px;
   height: 5px;
-  outline: none;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -174,21 +222,20 @@ img {
 /* CSS cho phần danh sách bài hát */
 .playlist {
   position: relative;
-  width: 430px;
   background-color: #333;
-  padding: 10px;
-  border-left: 1px solid #444;
-  overflow: scroll;
-}
-
-.playlist::-webkit-scrollbar {
-  display: none;
 }
 
 .playlist__list {
+  border-left: 1px solid #444;
+  padding: 10px;
+  width: 430px;
+  height: 100%;
   list-style: none;
-  padding: 0;
-  margin: 0;
+  overflow-y: auto;
+}
+
+.playlist__list::-webkit-scrollbar {
+  display: none;
 }
 
 .playlist__item {
@@ -225,18 +272,25 @@ img {
 }
 
 .playlist__item-details {
+  width: 260px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
 .playlist__item-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 16px;
   font-weight: bold;
   color: #fff;
 }
 
 .playlist__item-singer {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 14px;
   color: #aaa;
 }
@@ -245,4 +299,26 @@ img {
   font-size: 14px;
   color: #aaa;
   margin-left: auto;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar {
+  position: absolute;
+  right: 5px;
+  top: 0;
+  width: 12px;
+  height: 100%;
+  background-color: transparent;
+  opacity: 0;
+  transition: opacity 0.3s linear;
+  user-select: none;
+}
+
+.scroll-thumb {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  position: absolute;
+  cursor: pointer;
+  user-select: none;
 }
