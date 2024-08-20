@@ -8,6 +8,7 @@ const songName = document.querySelector(".song-name");
 const songSinger = document.querySelector(".song-singer");
 const songImage = document.querySelector(".song-image");
 const playBtn = document.querySelector(".play-btn");
+const buttons = document.querySelectorAll(".btn");
 const repeatBtn = document.querySelector(".repeat-btn");
 const shuffleBtn = document.querySelector(".shuffle-btn");
 const nextBtn = document.querySelector(".next-btn");
@@ -16,12 +17,6 @@ const currentTimeElement = document.querySelector(".current-time");
 const totalTimeElement = document.querySelector(".total-time");
 const playIcon = `<i class="fas fa-play icon__play"></i>`;
 const pauseIcon = `<i class="fas fa-pause icon__pause"></i>`;
-
-new RippleEffect(nextBtn);
-new RippleEffect(prevBtn);
-new RippleEffect(playBtn);
-new RippleEffect(repeatBtn);
-new RippleEffect(shuffleBtn);
 
 class MusicPlayer {
   constructor(songs, seekBar) {
@@ -336,3 +331,7 @@ player.initSong();
 const playlistContainer = document.querySelector(".playlist");
 const playlist = document.querySelector(".playlist__list");
 new Scrollbar(playlistContainer, playlist);
+
+buttons.forEach((item) => {
+  new RippleEffect(item);
+});
