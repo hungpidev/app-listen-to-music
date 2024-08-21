@@ -17,6 +17,7 @@ const currentTimeElement = document.querySelector(".current-time");
 const totalTimeElement = document.querySelector(".total-time");
 const playIcon = `<i class="fas fa-play icon__play"></i>`;
 const pauseIcon = `<i class="fas fa-pause icon__pause"></i>`;
+const loading = `<div class="loader"></div>`;
 
 class MusicPlayer {
   constructor(songs, seekBar) {
@@ -28,6 +29,8 @@ class MusicPlayer {
     this.isRepeating = false;
     this.isShuffling = false;
     this.isDragging = false;
+    this.isLoading = true;
+    this.loadingTimeout = null;
     this.initSong();
     this.loadState();
   }
@@ -135,6 +138,8 @@ class MusicPlayer {
   }
 
   next() {
+    if (!this.isLoading) return;
+    this.isLoading = false;
     this.currentIndex = (this.currentIndex + 1) % this.songs.length;
     this.loadCurrentSong();
     this.saveState();
@@ -142,6 +147,8 @@ class MusicPlayer {
   }
 
   prev() {
+    if (!this.isLoading) return;
+    this.isLoading = false;
     this.currentIndex =
       (this.currentIndex - 1 + this.songs.length) % this.songs.length;
     this.loadCurrentSong();
@@ -162,6 +169,7 @@ class MusicPlayer {
   }
 
   togglePlaySong() {
+    if (!this.isLoading) return;
     if (this.isPlaying) {
       this.pauseSong();
     } else {
@@ -199,7 +207,6 @@ class MusicPlayer {
     }
   }
 
-  // Xáo trộn bài hát
   shuffle() {
     const randomIndex = Math.floor(Math.random() * this.songs.length);
     this.currentIndex = randomIndex;
@@ -215,7 +222,17 @@ class MusicPlayer {
 
     this.audio.src = this.getCurrentSong().path;
     this.updateSongDetails();
-    this.playSong();
+
+    if (!this.isLoading) {
+      this.loadingTimeout = setTimeout(() => {
+        playBtn.innerHTML = loading;
+      }, 300);
+    }
+    this.audio.addEventListener("canplaythrough", () => {
+      this.isLoading = true;
+      this.playSong();
+      clearTimeout(this.loadingTimeout);
+    });
 
     const currentActiveItem = document.querySelector(
       `.playlist__item[data-index="${this.currentIndex}"]`
@@ -238,9 +255,13 @@ class MusicPlayer {
   }
 
   updateProgress() {
-    const progressPercent =
-      (this.audio.currentTime / this.audio.duration) * 100;
-    this.seekBar.setRangeValue(progressPercent);
+    if (this.audio.readyState === 0) {
+      this.seekBar.setRangeValue(0);
+    } else {
+      const progressPercent =
+        (this.audio.currentTime / this.audio.duration) * 100;
+      this.seekBar.setRangeValue(progressPercent);
+    }
   }
 
   updateTimeDisplay() {
@@ -266,12 +287,16 @@ const seekBar = new RangeControl(seekBarElement);
 const player = new MusicPlayer(musics, seekBar);
 
 player.seekBar.onDragStart = () => {
-  player.isDragging = true;
-  player.audio.removeEventListener("timeupdate", player.updateSeekTime);
+  if (isFinite(player.audio.duration)) {
+    player.isDragging = true;
+    player.audio.removeEventListener("timeupdate", player.updateSeekTime);
+  } else {
+    return;
+  }
 };
 
 player.seekBar.onInput = (value) => {
-  if (player.audio.duration) {
+  if (isFinite(player.audio.duration)) {
     const seekTime = (value / 100) * player.audio.duration;
     currentTimeElement.textContent = player.formatTime(seekTime);
   }
@@ -279,8 +304,10 @@ player.seekBar.onInput = (value) => {
 
 player.seekBar.onDragEnd = (value) => {
   if (player.isDragging) {
-    const seekTime = (value / 100) * player.audio.duration;
-    player.audio.currentTime = seekTime;
+    if (isFinite(player.audio.duration)) {
+      const seekTime = (value / 100) * player.audio.duration;
+      player.audio.currentTime = seekTime;
+    }
     player.isDragging = false;
   }
   player.audio.addEventListener("timeupdate", player.updateSeekTime);
