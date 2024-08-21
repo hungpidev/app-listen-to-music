@@ -221,12 +221,10 @@ class MusicPlayer {
       previousActiveItem.classList.remove("active");
     }
 
-    // Update the audio source and play the current song
     this.audio.src = this.getCurrentSong().path;
     this.updateSongDetails();
     this.playSong();
 
-    // Add active class to the current song
     const currentActiveItem = document.querySelector(
       `.playlist__item[data-index="${this.currentIndex}"]`
     );
@@ -250,11 +248,9 @@ class MusicPlayer {
 
   // Cập nhật tiến trình phát bài hát
   updateProgress() {
-    if (!this.isDragging) {
-      const progressPercent =
-        (this.audio.currentTime / this.audio.duration) * 100;
-      this.seekBar.setRangeValue(progressPercent);
-    }
+    const progressPercent =
+      (this.audio.currentTime / this.audio.duration) * 100;
+    this.seekBar.setRangeValue(progressPercent);
   }
 
   // Cập nhật thời gian hiển thị
