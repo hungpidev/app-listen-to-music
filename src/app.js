@@ -215,7 +215,6 @@ class MusicPlayer {
 
   // Tải bài hát hiện tại
   loadCurrentSong() {
-    // Remove active class from the previous song
     const previousActiveItem = document.querySelector(".playlist__item.active");
     if (previousActiveItem) {
       previousActiveItem.classList.remove("active");
