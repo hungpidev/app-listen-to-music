@@ -121,7 +121,6 @@ class MusicPlayer {
     localStorage.removeItem("musicPlayerState");
   }
 
-  // Khởi tạo bài hát
   initSong() {
     this.audio.src = this.getCurrentSong().path;
     this.updateSongDetails();
@@ -131,12 +130,10 @@ class MusicPlayer {
     this.scrollActiveSongIntoView();
   }
 
-  // Lấy bài hát hiện tại
   getCurrentSong() {
     return this.songs[this.currentIndex];
   }
 
-  // Chuyển bài hát
   next() {
     this.currentIndex = (this.currentIndex + 1) % this.songs.length;
     this.loadCurrentSong();
@@ -152,7 +149,6 @@ class MusicPlayer {
     this.scrollActiveSongIntoView();
   }
 
-  // Phát và tạm dừng bài hát
   playSong() {
     this.audio.play();
     this.isPlaying = true;
@@ -173,7 +169,6 @@ class MusicPlayer {
     }
   }
 
-  // Xử lý lặp lại và xáo trộn
   toggleRepeat() {
     this.isRepeating = !this.isRepeating;
     if (this.isRepeating) {
@@ -194,7 +189,6 @@ class MusicPlayer {
     this.saveState();
   }
 
-  // Kết thúc bài hát
   endSong() {
     if (this.isRepeating) {
       this.playSong();
@@ -213,7 +207,6 @@ class MusicPlayer {
     this.scrollActiveSongIntoView();
   }
 
-  // Tải bài hát hiện tại
   loadCurrentSong() {
     const previousActiveItem = document.querySelector(".playlist__item.active");
     if (previousActiveItem) {
@@ -232,7 +225,6 @@ class MusicPlayer {
     }
   }
 
-  // Cập nhật thông tin bài hát
   updateSongDetails() {
     const song = this.getCurrentSong();
     songName.textContent = song.name;
@@ -245,14 +237,12 @@ class MusicPlayer {
     player.updateProgress();
   }
 
-  // Cập nhật tiến trình phát bài hát
   updateProgress() {
     const progressPercent =
       (this.audio.currentTime / this.audio.duration) * 100;
     this.seekBar.setRangeValue(progressPercent);
   }
 
-  // Cập nhật thời gian hiển thị
   updateTimeDisplay() {
     const currentTime = this.audio.currentTime;
     const duration = this.audio.duration;
@@ -262,7 +252,6 @@ class MusicPlayer {
     );
   }
 
-  // Định dạng thời gian
   formatTime(time) {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
