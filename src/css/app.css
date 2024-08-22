@@ -169,6 +169,12 @@ img {
   cursor: pointer;
   transition: all 0.3s linear;
 }
+.btn:active {
+  background-color: #fff;
+}
+.btn:active i {
+  color: #333;
+}
 .btn i {
   z-index: 99;
 }
