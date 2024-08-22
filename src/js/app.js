@@ -28,21 +28,16 @@ class MusicPlayer {
     this.isRepeating = false;
     this.isShuffling = false;
     this.isDragging = false;
-    this.timeout = null;
     this.initSong();
     this.loadState();
   }
 
   onWaiting() {
-    playBtn.innerHTML = playIcon;
-    this.timeout = setTimeout(() => {
-      playBtn.innerHTML = loading;
-    }, 100);
+    playBtn.innerHTML = loading;
   }
 
   onPlaying() {
     playBtn.innerHTML = pauseIcon;
-    clearTimeout(this.timeout);
   }
 
   renderPlaylist() {
@@ -100,13 +95,6 @@ class MusicPlayer {
     const activeSongElement = document.querySelector(".playlist__item.active");
     const scroller = new SmoothScroller(container);
     scroller.scrollToCenter(activeSongElement);
-  }
-
-  updateActiveSong() {
-    const items = document.querySelectorAll(".playlist__item");
-    items.forEach((item, index) => {
-      item.classList.toggle("active", index === this.currentIndex);
-    });
   }
 
   saveState() {
