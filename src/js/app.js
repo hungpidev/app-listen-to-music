@@ -8,7 +8,6 @@ const songName = document.querySelector(".song-name");
 const songSinger = document.querySelector(".song-singer");
 const songImage = document.querySelector(".song-image");
 const playBtn = document.querySelector(".play-btn");
-const buttons = document.querySelectorAll(".btn");
 const repeatBtn = document.querySelector(".repeat-btn");
 const shuffleBtn = document.querySelector(".shuffle-btn");
 const nextBtn = document.querySelector(".next-btn");
@@ -29,10 +28,21 @@ class MusicPlayer {
     this.isRepeating = false;
     this.isShuffling = false;
     this.isDragging = false;
-    this.isLoading = true;
-    this.loadingTimeout = null;
+    this.timeout = null;
     this.initSong();
     this.loadState();
+  }
+
+  onWaiting() {
+    playBtn.innerHTML = playIcon;
+    this.timeout = setTimeout(() => {
+      playBtn.innerHTML = loading;
+    }, 100);
+  }
+
+  onPlaying() {
+    playBtn.innerHTML = pauseIcon;
+    clearTimeout(this.timeout);
   }
 
   renderPlaylist() {
@@ -138,8 +148,6 @@ class MusicPlayer {
   }
 
   next() {
-    if (!this.isLoading) return;
-    this.isLoading = false;
     this.currentIndex = (this.currentIndex + 1) % this.songs.length;
     this.loadCurrentSong();
     this.saveState();
@@ -147,8 +155,6 @@ class MusicPlayer {
   }
 
   prev() {
-    if (!this.isLoading) return;
-    this.isLoading = false;
     this.currentIndex =
       (this.currentIndex - 1 + this.songs.length) % this.songs.length;
     this.loadCurrentSong();
@@ -169,7 +175,6 @@ class MusicPlayer {
   }
 
   togglePlaySong() {
-    if (!this.isLoading) return;
     if (this.isPlaying) {
       this.pauseSong();
     } else {
@@ -219,21 +224,9 @@ class MusicPlayer {
     if (previousActiveItem) {
       previousActiveItem.classList.remove("active");
     }
-
     this.audio.src = this.getCurrentSong().path;
     this.updateSongDetails();
-
-    if (!this.isLoading) {
-      this.loadingTimeout = setTimeout(() => {
-        playBtn.innerHTML = loading;
-      }, 300);
-    }
-    this.audio.addEventListener("canplaythrough", () => {
-      this.isLoading = true;
-      this.playSong();
-      clearTimeout(this.loadingTimeout);
-    });
-
+    this.playSong();
     const currentActiveItem = document.querySelector(
       `.playlist__item[data-index="${this.currentIndex}"]`
     );
@@ -337,12 +330,11 @@ shuffleBtn.addEventListener("click", () => {
   player.toggleShuffle();
 });
 
+player.audio.addEventListener("waiting", player.onWaiting);
+player.audio.addEventListener("playing", player.onPlaying);
+
 player.initSong();
 
 const playlistContainer = document.querySelector(".playlist");
 const playlist = document.querySelector(".playlist__list");
 new Scrollbar(playlistContainer, playlist);
-
-buttons.forEach((item) => {
-  new RippleEffect(item);
-});
