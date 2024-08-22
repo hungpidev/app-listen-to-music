@@ -1,8 +1,10 @@
 import { RangeControl } from "./components/RangeControl.js";
-import { RippleEffect } from "./components/RippleEffect.js";
+import { RippleEffect } from "./effect/RippleEffect.js";
 import { Scrollbar } from "./components/Scrollbar.js";
 import { SmoothScroller } from "./components/SmoothScroller.js";
 import { musics } from "./data/musics.js";
+import { pauseIcon, playIcon } from "./icon/icon.js";
+import { loading, waveEffect } from "./effect/effect.js";
 
 const songName = document.querySelector(".song-name");
 const songSinger = document.querySelector(".song-singer");
@@ -14,9 +16,6 @@ const nextBtn = document.querySelector(".next-btn");
 const prevBtn = document.querySelector(".prev-btn");
 const currentTimeElement = document.querySelector(".current-time");
 const totalTimeElement = document.querySelector(".total-time");
-const playIcon = `<i class="fas fa-play icon__play"></i>`;
-const pauseIcon = `<i class="fas fa-pause icon__pause"></i>`;
-const loading = `<div class="loader"></div>`;
 
 class MusicPlayer {
   constructor(songs, seekBar) {
@@ -33,24 +32,22 @@ class MusicPlayer {
     this.loadState();
   }
 
-  onWaiting() {
-    playBtn.innerHTML = loading;
-  }
-
-  onPlaying() {
-    playBtn.innerHTML = pauseIcon;
-  }
-
   renderPlaylist() {
     const playlistElement = document.querySelector(".playlist__list");
     playlistElement.innerHTML = this.songs
       .map(
         (song, index) => `
         <li class="playlist__item ${
-          index === this.currentIndex ? "active" : ""
+          index === this.currentIndex ? "active-song" : ""
         }" data-index="${index}">
-          <div class="playlist__item-thumb">
-            <img src="${song.image}" alt="${song.name}">
+          <div class="thumb-container">
+            <div class="playlist__item-thumb">
+              <img src="${song.image}" alt="${song.name}">
+            </div>
+            <div class="overlay-wave ${
+              index === this.currentIndex ? "active-wave" : ""
+            }">
+            </div>
           </div>
           <div class="playlist__item-details">
             <span class="playlist__item-name">${song.name}</span>
@@ -94,7 +91,9 @@ class MusicPlayer {
 
   scrollActiveSongIntoView() {
     const container = document.querySelector(".playlist__list");
-    const activeSongElement = document.querySelector(".playlist__item.active");
+    const activeSongElement = document.querySelector(
+      ".playlist__item.active-song"
+    );
     const scroller = new SmoothScroller(container);
     scroller.scrollToCenter(activeSongElement);
   }
@@ -159,7 +158,7 @@ class MusicPlayer {
     if (playPromise !== undefined) {
       playPromise
         .then((_) => {})
-        .catch((error) => {
+        .catch((_) => {
           console.log(
             `%cCó lẽ kết nối internet đang chạy marathon chậm rãi, nhưng ngón tay của bạn thì lại muốn về đích trước rồi!  🤣 🤣 🤣`,
             "font-size: 30px; color: #73ff26;"
@@ -168,12 +167,14 @@ class MusicPlayer {
     }
     this.isPlaying = true;
     playBtn.innerHTML = pauseIcon;
+    this.activeWave();
   }
 
   pauseSong() {
     this.audio.pause();
     this.isPlaying = false;
     playBtn.innerHTML = playIcon;
+    this.activeWave();
   }
 
   togglePlaySong() {
@@ -252,19 +253,42 @@ class MusicPlayer {
     }
   }
 
-  loadCurrentSong() {
-    const previousActiveItem = document.querySelector(".playlist__item.active");
-    if (previousActiveItem) {
-      previousActiveItem.classList.remove("active");
-    }
-    this.audio.src = this.getCurrentSong().path;
-    this.updateSongDetails();
+  activeSong() {
+    const previousActiveItem = document.querySelector(".active-song");
     const currentActiveItem = document.querySelector(
       `.playlist__item[data-index="${this.currentIndex}"]`
     );
-    if (currentActiveItem) {
-      currentActiveItem.classList.add("active");
+    if (previousActiveItem) {
+      previousActiveItem.classList.remove("active-song");
     }
+    if (currentActiveItem) {
+      currentActiveItem.classList.add("active-song");
+    }
+  }
+
+  activeWave() {
+    const previousActiveWave = document.querySelector(".active-wave");
+    const currentActiveWave = document.querySelector(
+      `.playlist__item[data-index="${this.currentIndex}"] .overlay-wave`
+    );
+
+    if (previousActiveWave) {
+      previousActiveWave.classList.remove("active-wave");
+      previousActiveWave.innerHTML = "";
+      previousActiveWave.style.backgroundColor = "transparent";
+    }
+
+    if (this.isPlaying) {
+      currentActiveWave.classList.add("active-wave");
+      currentActiveWave.innerHTML = waveEffect;
+      currentActiveWave.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+    }
+  }
+
+  loadCurrentSong() {
+    this.audio.src = this.getCurrentSong().path;
+    this.updateSongDetails();
+    this.activeSong();
   }
 
   updateSongDetails() {
@@ -362,8 +386,12 @@ shuffleBtn.addEventListener("click", () => {
   player.toggleShuffle();
 });
 
-player.audio.addEventListener("waiting", player.onWaiting);
-player.audio.addEventListener("playing", player.onPlaying);
+player.audio.addEventListener("waiting", () => {
+  playBtn.innerHTML = loading;
+});
+player.audio.addEventListener("playing", () => {
+  playBtn.innerHTML = pauseIcon;
+});
 
 player.initSong();
 

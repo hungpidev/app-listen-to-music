@@ -4,7 +4,7 @@
 
   &__list {
     border-left: 1px solid #444;
-    padding: 10px;
+    padding: 10px 0;
     width: 430px;
     height: 100%;
     list-style: none;
@@ -18,7 +18,7 @@
   &__item {
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding: 10px 20px;
     cursor: pointer;
     border-bottom: 1px solid #444;
     transition: background-color 0.3s;
@@ -27,19 +27,13 @@
       background-color: #444;
     }
 
-    &.active {
+    &.active-song {
       background-color: #555;
     }
 
     &-thumb {
-      width: 50px;
-      height: 50px;
-      border-radius: 5px;
-      margin-right: 15px;
-      user-select: none;
-      border-radius: 50%;
-      overflow: hidden;
-      z-index: 99;
+      width: 100%;
+      height: 100%;
 
       img {
         width: 100%;
@@ -84,4 +78,29 @@
   }
 
 
+}
+
+.thumb-container {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  margin-right: 15px;
+  user-select: none;
+  border-radius: 50%;
+  overflow: hidden;
+  z-index: 99;
+}
+
+.overlay-wave {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
