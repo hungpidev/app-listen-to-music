@@ -28,6 +28,7 @@ class MusicPlayer {
     this.isRepeating = false;
     this.isShuffling = false;
     this.isDragging = false;
+    this.playedSongs = [];
     this.initSong();
     this.loadState();
   }
@@ -85,6 +86,7 @@ class MusicPlayer {
     } else {
       this.currentIndex = index;
       this.loadCurrentSong();
+      this.playSong();
       this.saveState();
       this.scrollActiveSongIntoView();
     }
@@ -138,6 +140,7 @@ class MusicPlayer {
   next() {
     this.currentIndex = (this.currentIndex + 1) % this.songs.length;
     this.loadCurrentSong();
+    this.playSong();
     this.saveState();
     this.scrollActiveSongIntoView();
   }
@@ -146,12 +149,23 @@ class MusicPlayer {
     this.currentIndex =
       (this.currentIndex - 1 + this.songs.length) % this.songs.length;
     this.loadCurrentSong();
+    this.playSong();
     this.saveState();
     this.scrollActiveSongIntoView();
   }
 
   playSong() {
-    this.audio.play();
+    const playPromise = this.audio.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then((_) => {})
+        .catch((error) => {
+          console.log(
+            `%cCó lẽ kết nối internet đang chạy marathon chậm rãi, nhưng ngón tay của bạn thì lại muốn về đích trước rồi!  🤣 🤣 🤣`,
+            "font-size: 30px; color: #73ff26;"
+          );
+        });
+    }
     this.isPlaying = true;
     playBtn.innerHTML = pauseIcon;
   }
@@ -185,9 +199,47 @@ class MusicPlayer {
     if (this.isShuffling) {
       this.isRepeating = false;
       repeatBtn.classList.remove("active");
+
+      if (this.playedSongs.length >= this.songs.length) {
+        this.playedSongs = [];
+      }
+
+      if (!this.playedSongs.includes(this.currentIndex)) {
+        this.playedSongs.push(this.currentIndex);
+      }
+    } else {
+      this.playedSongs = [];
     }
     shuffleBtn.classList.toggle("active", this.isShuffling);
     this.saveState();
+  }
+
+  shuffle() {
+    if (this.playedSongs.length >= this.songs.length) {
+      console.log("All songs have been played");
+      this.isShuffling = false;
+      shuffleBtn.classList.remove("active");
+      this.currentIndex = 0;
+      this.loadCurrentSong();
+      this.pauseSong();
+      this.saveState();
+      return;
+    }
+
+    if (!this.playedSongs.includes(this.currentIndex)) {
+      this.playedSongs.push(this.currentIndex);
+    }
+
+    let randomIndex;
+    do {
+      randomIndex = Math.floor(Math.random() * this.songs.length);
+    } while (this.playedSongs.includes(randomIndex));
+
+    this.playedSongs.push(randomIndex);
+    this.currentIndex = randomIndex;
+    this.loadCurrentSong();
+    this.playSong();
+    this.scrollActiveSongIntoView();
   }
 
   endSong() {
@@ -200,13 +252,6 @@ class MusicPlayer {
     }
   }
 
-  shuffle() {
-    const randomIndex = Math.floor(Math.random() * this.songs.length);
-    this.currentIndex = randomIndex;
-    this.loadCurrentSong();
-    this.scrollActiveSongIntoView();
-  }
-
   loadCurrentSong() {
     const previousActiveItem = document.querySelector(".playlist__item.active");
     if (previousActiveItem) {
@@ -214,7 +259,6 @@ class MusicPlayer {
     }
     this.audio.src = this.getCurrentSong().path;
     this.updateSongDetails();
-    this.playSong();
     const currentActiveItem = document.querySelector(
       `.playlist__item[data-index="${this.currentIndex}"]`
     );
