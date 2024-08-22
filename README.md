@@ -1,1 +1,1 @@
-sass src/sass/app.scss src/app.css --watch
+sass src/sass/app.scss src/css/app.css --watch
