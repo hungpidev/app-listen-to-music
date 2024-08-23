@@ -1,14 +1,18 @@
 .player {
   display: flex;
-  height: 563px;
+  height: 100%;
   background-color: #282828;
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   overflow: hidden;
 
   &-content {
-    padding: 10px;
+    padding: 20px 0;
     width: 430px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -33,7 +37,7 @@
     height: 340px;
     overflow: hidden;
     border-radius: 50%;
-    margin: 10px auto 20px;
+    margin-bottom: 20px;
     box-shadow: 0 4px 20px rgb(0 0 0 / 28%);
     position: relative;
 
@@ -47,13 +51,18 @@
   }
 }
 
-.controls {
+.actions {
   max-width: 350px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
+}
+
+.controls {
+  width: 100%;
+  margin-top: auto;
 }
 
 .btn {

@@ -7,7 +7,7 @@
 
 .seek-bar {
   position: relative;
-  width: 290px;
+  width: 300px;
   height: 5px;
   cursor: pointer;
   display: flex;
@@ -23,7 +23,7 @@
   }
 
   &-container {
-    padding: 0 5px;
+    padding: 0 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
