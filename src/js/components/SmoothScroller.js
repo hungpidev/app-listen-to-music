@@ -2,6 +2,8 @@ export class SmoothScroller {
   constructor(container, duration = 2000) {
     this.container = container;
     this.duration = duration;
+    this.isScrolling = false;
+    this.cancelScroll = this.cancelScroll.bind(this);
   }
 
   isElementInView(element) {
@@ -16,7 +18,7 @@ export class SmoothScroller {
 
   scrollToCenter(element) {
     if (this.isElementInView(element)) {
-      return; // Không cần cuộn nếu phần tử đã nằm trong tầm nhìn
+      return;
     }
 
     const containerRect = this.container.getBoundingClientRect();
@@ -32,7 +34,14 @@ export class SmoothScroller {
     const distance = targetScrollTop - startScrollTop;
     const startTime = performance.now();
 
+    this.isScrolling = true;
+    this.container.addEventListener("wheel", this.cancelScroll);
+    this.container.addEventListener("touchmove", this.cancelScroll);
+    this.container.addEventListener("mousedown", this.cancelScroll);
+
     const smoothScroll = (currentTime) => {
+      if (!this.isScrolling) return;
+
       const elapsedTime = currentTime - startTime;
       const progress = Math.min(elapsedTime / this.duration, 1);
 
@@ -45,9 +54,23 @@ export class SmoothScroller {
 
       if (progress < 1) {
         window.requestAnimationFrame(smoothScroll);
+      } else {
+        this.isScrolling = false;
+        this.removeEventListeners();
       }
     };
 
     window.requestAnimationFrame(smoothScroll);
+  }
+
+  cancelScroll() {
+    this.isScrolling = false;
+    this.removeEventListeners();
+  }
+
+  removeEventListeners() {
+    this.container.removeEventListener("wheel", this.cancelScroll);
+    this.container.removeEventListener("touchmove", this.cancelScroll);
+    this.container.removeEventListener("mousedown", this.cancelScroll);
   }
 }

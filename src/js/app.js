@@ -389,7 +389,6 @@ shuffleBtn.addEventListener("click", () => {
 player.audio.addEventListener("waiting", () => {
   playBtn.innerHTML = loading;
 
-  // Thêm hiệu ứng loading vào activeWave khi đang tải
   const currentActiveWave = document.querySelector(
     `.playlist__item[data-index="${player.currentIndex}"] .overlay-wave`
   );
@@ -404,7 +403,6 @@ player.audio.addEventListener("waiting", () => {
 player.audio.addEventListener("playing", () => {
   playBtn.innerHTML = pauseIcon;
 
-  // Thay thế bằng hiệu ứng wave khi bài hát bắt đầu phát
   const currentActiveWave = document.querySelector(
     `.playlist__item[data-index="${player.currentIndex}"] .overlay-wave`
   );
