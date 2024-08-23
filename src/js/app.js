@@ -388,9 +388,31 @@ shuffleBtn.addEventListener("click", () => {
 
 player.audio.addEventListener("waiting", () => {
   playBtn.innerHTML = loading;
+
+  // Thêm hiệu ứng loading vào activeWave khi đang tải
+  const currentActiveWave = document.querySelector(
+    `.playlist__item[data-index="${player.currentIndex}"] .overlay-wave`
+  );
+
+  if (currentActiveWave) {
+    currentActiveWave.classList.add("active-wave");
+    currentActiveWave.innerHTML = loading;
+    currentActiveWave.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+  }
 });
+
 player.audio.addEventListener("playing", () => {
   playBtn.innerHTML = pauseIcon;
+
+  // Thay thế bằng hiệu ứng wave khi bài hát bắt đầu phát
+  const currentActiveWave = document.querySelector(
+    `.playlist__item[data-index="${player.currentIndex}"] .overlay-wave`
+  );
+
+  if (currentActiveWave) {
+    currentActiveWave.innerHTML = waveEffect;
+    currentActiveWave.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+  }
 });
 
 player.initSong();
