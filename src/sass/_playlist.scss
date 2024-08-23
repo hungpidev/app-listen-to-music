@@ -24,6 +24,10 @@
     border-bottom: 1px solid #444;
     transition: background-color 0.3s;
 
+    &:first-child {
+      border-top: 1px solid #444;
+    }
+
     &:hover {
       background-color: #444;
     }

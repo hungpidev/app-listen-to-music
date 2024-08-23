@@ -115,17 +115,14 @@ img {
   overflow: hidden;
 }
 .player-content {
-  padding: 20px 0;
   width: 430px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
 .song-info {
   text-align: center;
-  margin-bottom: 20px;
 }
 .song-info h2 {
   font-size: 18px;
@@ -136,10 +133,11 @@ img {
   color: #aaa;
 }
 .song-image {
-  width: 340px;
-  height: 340px;
+  width: 300px;
+  height: 300px;
   overflow: hidden;
   border-radius: 50%;
+  margin-top: 20px;
   margin-bottom: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
   position: relative;
@@ -162,7 +160,9 @@ img {
 }
 
 .controls {
+  background-color: #1f1f1f;
   width: 100%;
+  padding: 20px 0;
   margin-top: auto;
 }
 
@@ -222,6 +222,9 @@ img {
   cursor: pointer;
   border-bottom: 1px solid #444;
   transition: background-color 0.3s;
+}
+.playlist__item:first-child {
+  border-top: 1px solid #444;
 }
 .playlist__item:hover {
   background-color: #444;
@@ -399,7 +402,7 @@ img {
 
 body {
   font-family: "Mulish", sans-serif;
-  background-color: #1e1e1e;
+  background-color: #141414;
   color: #fff;
   display: flex;
   justify-content: center;
