@@ -42,7 +42,7 @@ class MusicPlayer {
         }" data-index="${index}">
           <div class="thumb-container">
             <div class="playlist__item-thumb">
-              <img src="${song.image}" alt="${song.name}">
+              <img srcset="${song.image} 2x" alt="${song.name}">
             </div>
             <div class="overlay-wave ${
               index === this.currentIndex ? "active-wave" : ""
@@ -295,7 +295,7 @@ class MusicPlayer {
     const song = this.getCurrentSong();
     songName.textContent = song.name;
     songSinger.textContent = song.singer;
-    songImage.innerHTML = `<img src="${song.image}" alt="${song.name}">`;
+    songImage.innerHTML = `<img srcset="${song.image} 2x" alt="${song.name}">`;
   }
 
   updateSeekTime() {
