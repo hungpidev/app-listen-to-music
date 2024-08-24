@@ -408,6 +408,32 @@ img {
   transition: all 0.3s linear;
 }
 
+@media only screen and (max-width: 1024px) {
+  .playlist {
+    display: none;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .player-content {
+    width: 350px;
+  }
+
+  .seek-bar {
+    width: 230px;
+  }
+
+  .slider-thumb {
+    opacity: 1;
+  }
+
+  .actions {
+    padding: 0 10px;
+  }
+
+  .controls {
+    padding: 20px 0 10px 0;
+  }
+}
 body {
   font-family: "Mulish", sans-serif;
   background-color: #141414;
