@@ -256,9 +256,8 @@ class MusicPlayer {
         .then((_) => {})
         .catch((_) => {
           console.log(
-            `%cCó lẽ kết nối internet đang chạy marathon chậm rãi, nhưng ngón tay của bạn thì lại muốn về đích trước rồi!  🤣 🤣 🤣,
+            `%cCó lẽ kết nối internet đang chạy marathon chậm rãi, nhưng ngón tay của bạn thì lại muốn về đích trước rồi!  🤣 🤣 🤣`,
             "font-size: 30px; color: #73ff26;"
-          `
           );
         });
     }
