@@ -10,6 +10,8 @@
   .icon-list {
     opacity: 0;
     visibility: hidden;
+    z-index: 99999;
+    position: absolute;
   }
 
   &-content {

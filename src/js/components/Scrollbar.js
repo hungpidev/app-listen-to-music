@@ -53,7 +53,6 @@ export class Scrollbar {
       this.showScrollbar();
       this.updateThumbPosition();
 
-      // Hide scrollbar after a delay
       clearTimeout(this.hideTimeout);
       this.hideTimeout = setTimeout(() => this.hideScrollbar(), 2000);
     });

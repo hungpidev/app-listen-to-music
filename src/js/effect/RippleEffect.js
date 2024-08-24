@@ -24,8 +24,8 @@ export class RippleEffect {
     ripple.style.backgroundColor = this.backgroundColor;
     ripple.style.transform = "scale(0)";
     ripple.style.transition = `transform ${this.duration}ms ease, opacity ${this.duration}ms ease`;
-    ripple.style.pointerEvents = "none"; // Prevent ripple from interfering with click events
-    ripple.style.zIndex = "0"; // Make sure the ripple is below the text
+    ripple.style.pointerEvents = "none";
+    ripple.style.zIndex = "0";
 
     const x = event.clientX - rect.left - size / 2;
     const y = event.clientY - rect.top - size / 2;
@@ -34,12 +34,10 @@ export class RippleEffect {
 
     this.element.appendChild(ripple);
 
-    // Start ripple effect
     requestAnimationFrame(() => {
       ripple.style.transform = `scale(${this.scale})`;
     });
 
-    // Remove ripple on mouseup
     const removeRipple = () => {
       ripple.style.opacity = "0";
       ripple.addEventListener("transitionend", () => {

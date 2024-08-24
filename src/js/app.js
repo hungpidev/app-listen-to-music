@@ -66,7 +66,6 @@ class MusicPlayer {
       this.updateSongDurationDisplay();
     };
 
-    // Thêm sự kiện timeupdate sử dụng hàm handler đã định nghĩa
     this.audio.addEventListener("timeupdate", this.updateProgressHandler);
 
     this.audio.addEventListener("ended", this.endSong.bind(this));
