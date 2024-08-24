@@ -5,15 +5,22 @@
 
   .playlist {
     position: absolute;
-    top: 100%;
+    bottom: -459px;
     z-index: 99;
     height: calc(100% - 128px);
+    transform: translateY(0px);
+    transition: transform 0.5s linear;
   }
 
   .show {
-    top: 0;
-    transition: all 1.2s ease-in-out;
+    transform: translateY(-459px - 128px);
+    transition: transform 0.5s linear;
   }
+
+  .playlist__item:hover {
+    background-color: #333;
+  }
+
 
   .song-image {
     margin-top: 50px;

@@ -449,7 +449,7 @@ player.initSong();
 
 const buttonList = document.querySelector(".icon-list");
 buttonList.addEventListener("click", () => {
-  playlistContainer.classList.add("show");
+  playlistContainer.classList.toggle("show");
 });
 
 const playlist = document.querySelector(".playlist__list");
