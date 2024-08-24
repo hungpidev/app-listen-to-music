@@ -1,4 +1,24 @@
 @media only screen and (max-width: 1024px) {
+  .player {
+    .icon-list {
+      opacity: 1;
+      visibility: visible;
+      z-index: 99999;
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 40px;
+      height: 40px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #3a3a3a;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+  }
+
   body {
     padding: 10px 0 !important;
   }
