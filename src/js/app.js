@@ -30,16 +30,85 @@ class MusicPlayer {
     this.playedSongs = [];
     this.initSong();
     this.loadState();
+
+    this.audio.addEventListener("waiting", () => {
+      playBtn.innerHTML = loading;
+
+      const currentActiveWave = document.querySelector(
+        `.playlist__item[data-index="${this.currentIndex}"] .overlay-wave`
+      );
+
+      if (currentActiveWave) {
+        currentActiveWave.classList.add("active-wave");
+        currentActiveWave.innerHTML = loading;
+        currentActiveWave.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+      }
+    });
+
+    this.audio.addEventListener("playing", () => {
+      playBtn.innerHTML = pauseIcon;
+
+      const currentActiveWave = document.querySelector(
+        `.playlist__item[data-index="${this.currentIndex}"] .overlay-wave`
+      );
+
+      if (currentActiveWave) {
+        currentActiveWave.innerHTML = waveEffect;
+        currentActiveWave.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+      }
+    });
+
+    // Định nghĩa hàm handler cho sự kiện timeupdate
+    this.updateProgressHandler = () => {
+      this.updateProgress();
+      this.updateTimeDisplay();
+      this.updateSongDurationDisplay();
+    };
+
+    // Thêm sự kiện timeupdate sử dụng hàm handler đã định nghĩa
+    this.audio.addEventListener("timeupdate", this.updateProgressHandler);
+
+    this.audio.addEventListener("ended", this.endSong.bind(this));
+
+    this.seekBar.onDragStart = () => {
+      if (isFinite(this.audio.duration)) {
+        this.isDragging = true;
+        this.audio.removeEventListener(
+          "timeupdate",
+          this.updateProgressHandler
+        );
+      } else {
+        return;
+      }
+    };
+
+    this.seekBar.onInput = (value) => {
+      if (isFinite(this.audio.duration)) {
+        const seekTime = (value / 100) * this.audio.duration;
+        currentTimeElement.textContent = this.formatTime(seekTime);
+      }
+    };
+
+    this.seekBar.onDragEnd = (value) => {
+      if (this.isDragging) {
+        if (isFinite(this.audio.duration)) {
+          const seekTime = (value / 100) * this.audio.duration;
+          this.audio.currentTime = seekTime;
+        }
+        this.isDragging = false;
+      }
+      this.audio.addEventListener("timeupdate", this.updateProgressHandler);
+    };
   }
 
   renderPlaylist() {
     const playlistElement = document.querySelector(".playlist__list");
     playlistElement.innerHTML = this.songs
       .map(
-        (song, index) => `
-        <li class="playlist__item ${
-          index === this.currentIndex ? "active-song" : ""
-        }" data-index="${index}">
+        (song, index) =>
+          `<li class="playlist__item ${
+            index === this.currentIndex ? "active-song" : ""
+          }" data-index="${index}">
           <div class="thumb-container">
             <div class="playlist__item-thumb">
               <img src="${song.image}" alt="${song.name}">
@@ -53,9 +122,10 @@ class MusicPlayer {
             <span class="playlist__item-name">${song.name}</span>
             <span class="playlist__item-singer">${song.singer}</span>
           </div>
-          <div class="playlist__item-duration">${song.duration}</div>
-        </li>
-      `
+          <div class="playlist__item-duration ${
+            index === this.currentIndex ? "active__current-time" : ""
+          }">${song.duration}</div>
+        </li>`
       )
       .join("");
 
@@ -77,10 +147,34 @@ class MusicPlayer {
     });
   }
 
+  updateSongDurationDisplay() {
+    const currentDurationElement = document.querySelector(
+      `.playlist__item[data-index="${this.currentIndex}"] .playlist__item-duration`
+    );
+
+    if (currentDurationElement && this.audio.duration) {
+      currentDurationElement.textContent = this.formatTime(
+        this.audio.currentTime
+      );
+    }
+  }
+
+  resetPreviousSongDuration() {
+    const previousDurationElement = document.querySelector(
+      `.playlist__item[data-index="${this.currentIndex}"] .playlist__item-duration`
+    );
+
+    if (previousDurationElement) {
+      const previousSong = this.songs[this.currentIndex];
+      previousDurationElement.textContent = previousSong.duration;
+    }
+  }
+
   selectSong(index) {
-    if (this.currentIndex === index) {
+    if (this.currentIndex === index && this.isPlaying) {
       return;
     } else {
+      this.resetPreviousSongDuration();
       this.currentIndex = index;
       this.loadCurrentSong();
       this.playSong();
@@ -137,6 +231,7 @@ class MusicPlayer {
   }
 
   next() {
+    this.resetPreviousSongDuration();
     this.currentIndex = (this.currentIndex + 1) % this.songs.length;
     this.loadCurrentSong();
     this.playSong();
@@ -145,6 +240,7 @@ class MusicPlayer {
   }
 
   prev() {
+    this.resetPreviousSongDuration();
     this.currentIndex =
       (this.currentIndex - 1 + this.songs.length) % this.songs.length;
     this.loadCurrentSong();
@@ -160,8 +256,9 @@ class MusicPlayer {
         .then((_) => {})
         .catch((_) => {
           console.log(
-            `%cCó lẽ kết nối internet đang chạy marathon chậm rãi, nhưng ngón tay của bạn thì lại muốn về đích trước rồi!  🤣 🤣 🤣`,
+            `%cCó lẽ kết nối internet đang chạy marathon chậm rãi, nhưng ngón tay của bạn thì lại muốn về đích trước rồi!  🤣 🤣 🤣,
             "font-size: 30px; color: #73ff26;"
+          `
           );
         });
     }
@@ -255,9 +352,8 @@ class MusicPlayer {
 
   activeSong() {
     const previousActiveItem = document.querySelector(".active-song");
-    const currentActiveItem = document.querySelector(
-      `.playlist__item[data-index="${this.currentIndex}"]`
-    );
+    const currentActiveItem = document.querySelector(`
+      .playlist__item[data-index="${this.currentIndex}"]`);
     if (previousActiveItem) {
       previousActiveItem.classList.remove("active-song");
     }
@@ -268,9 +364,9 @@ class MusicPlayer {
 
   activeWave() {
     const previousActiveWave = document.querySelector(".active-wave");
-    const currentActiveWave = document.querySelector(
-      `.playlist__item[data-index="${this.currentIndex}"] .overlay-wave`
-    );
+    const currentActiveWave = document.querySelector(`
+      .playlist__item[data-index="${this.currentIndex}"] .overlay-wave
+    `);
 
     if (previousActiveWave) {
       previousActiveWave.classList.remove("active-wave");
@@ -296,11 +392,6 @@ class MusicPlayer {
     songName.textContent = song.name;
     songSinger.textContent = song.singer;
     songImage.innerHTML = `<img src="${song.image}" alt="${song.name}">`;
-  }
-
-  updateSeekTime() {
-    player.updateTimeDisplay();
-    player.updateProgress();
   }
 
   updateProgress() {
@@ -335,37 +426,6 @@ const seekBarElement = document.querySelector(".seek-bar");
 const seekBar = new RangeControl(seekBarElement);
 const player = new MusicPlayer(musics, seekBar);
 
-player.seekBar.onDragStart = () => {
-  if (isFinite(player.audio.duration)) {
-    player.isDragging = true;
-    player.audio.removeEventListener("timeupdate", player.updateSeekTime);
-  } else {
-    return;
-  }
-};
-
-player.seekBar.onInput = (value) => {
-  if (isFinite(player.audio.duration)) {
-    const seekTime = (value / 100) * player.audio.duration;
-    currentTimeElement.textContent = player.formatTime(seekTime);
-  }
-};
-
-player.seekBar.onDragEnd = (value) => {
-  if (player.isDragging) {
-    if (isFinite(player.audio.duration)) {
-      const seekTime = (value / 100) * player.audio.duration;
-      player.audio.currentTime = seekTime;
-    }
-    player.isDragging = false;
-  }
-  player.audio.addEventListener("timeupdate", player.updateSeekTime);
-};
-
-player.audio.addEventListener("timeupdate", player.updateSeekTime);
-
-player.audio.addEventListener("ended", player.endSong.bind(player));
-
 playBtn.addEventListener("click", () => {
   player.togglePlaySong();
 });
@@ -385,34 +445,6 @@ repeatBtn.addEventListener("click", () => {
 shuffleBtn.addEventListener("click", () => {
   player.toggleShuffle();
 });
-
-player.audio.addEventListener("waiting", () => {
-  playBtn.innerHTML = loading;
-
-  const currentActiveWave = document.querySelector(
-    `.playlist__item[data-index="${player.currentIndex}"] .overlay-wave`
-  );
-
-  if (currentActiveWave) {
-    currentActiveWave.classList.add("active-wave");
-    currentActiveWave.innerHTML = loading;
-    currentActiveWave.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
-  }
-});
-
-player.audio.addEventListener("playing", () => {
-  playBtn.innerHTML = pauseIcon;
-
-  const currentActiveWave = document.querySelector(
-    `.playlist__item[data-index="${player.currentIndex}"] .overlay-wave`
-  );
-
-  if (currentActiveWave) {
-    currentActiveWave.innerHTML = waveEffect;
-    currentActiveWave.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
-  }
-});
-
 player.initSong();
 
 const playlistContainer = document.querySelector(".playlist");

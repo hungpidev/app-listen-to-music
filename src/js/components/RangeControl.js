@@ -34,7 +34,6 @@ export class RangeControl {
     this.container.setAttribute("aria-valuenow", value);
     this.currentValue = value;
 
-    // Gọi onInput liên tục khi giá trị thay đổi
     if (triggerInput && this.onInput) {
       this.onInput(value);
     }
@@ -43,6 +42,11 @@ export class RangeControl {
   init() {
     this.setRangeValue(this.currentValue, false);
     this.container.addEventListener("mousedown", this.startDragging.bind(this));
+    this.container.addEventListener(
+      "touchstart",
+      this.startTouchDragging.bind(this),
+      { passive: false }
+    );
     this.container.addEventListener("keydown", this.handleKeyDown.bind(this));
   }
 
@@ -54,7 +58,16 @@ export class RangeControl {
     return value;
   }
 
+  getTouchValue(e) {
+    let rect = this.container.getBoundingClientRect();
+    let offsetX = e.touches[0].clientX - rect.left;
+    let value =
+      this.minValue + (offsetX / rect.width) * (this.maxValue - this.minValue);
+    return value;
+  }
+
   startDragging(e) {
+    e.preventDefault();
     this.isDragging = true;
     this.setRangeValue(this.getMouseValue(e));
     if (this.onDragStart) this.onDragStart();
@@ -62,9 +75,26 @@ export class RangeControl {
     document.addEventListener("mouseup", this.stopDragging.bind(this));
   }
 
+  startTouchDragging(e) {
+    if (e.cancelable) e.preventDefault();
+    this.isDragging = true;
+    this.setRangeValue(this.getTouchValue(e));
+    if (this.onDragStart) this.onDragStart();
+    document.addEventListener("touchmove", this.onTouchMove.bind(this), {
+      passive: false,
+    });
+    document.addEventListener("touchend", this.stopTouchDragging.bind(this));
+  }
+
   onMouseMove(e) {
     if (!this.isDragging) return;
-    this.setRangeValue(this.getMouseValue(e)); // Gọi onInput mỗi khi mousemove xảy ra
+    this.setRangeValue(this.getMouseValue(e));
+  }
+
+  onTouchMove(e) {
+    if (!this.isDragging) return;
+    if (e.cancelable) e.preventDefault();
+    this.setRangeValue(this.getTouchValue(e));
   }
 
   stopDragging(e) {
@@ -74,6 +104,15 @@ export class RangeControl {
     this.isDragging = false;
     document.removeEventListener("mousemove", this.onMouseMove.bind(this));
     document.removeEventListener("mouseup", this.stopDragging.bind(this));
+  }
+
+  stopTouchDragging(e) {
+    if (this.isDragging) {
+      if (this.onDragEnd) this.onDragEnd(this.currentValue);
+    }
+    this.isDragging = false;
+    document.removeEventListener("touchmove", this.onTouchMove.bind(this));
+    document.removeEventListener("touchend", this.stopTouchDragging.bind(this));
   }
 
   handleKeyDown(e) {
