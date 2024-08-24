@@ -1,6 +1,22 @@
 @media only screen and (max-width: 1024px) {
+  body {
+    padding: 10px 0 !important;
+  }
+
   .playlist {
-    display: none;
+    position: absolute;
+    top: 100%;
+    z-index: 99;
+    height: calc(100% - 128px);
+  }
+
+  .show {
+    top: 0;
+    transition: all 1.2s ease-in-out;
+  }
+
+  .song-image {
+    margin-top: 50px;
   }
 }
 
@@ -28,5 +44,47 @@
 
   .controls {
     padding: 20px 0 10px 0;
+  }
+
+  .song-image {
+    margin-top: 50px;
+  }
+
+  .playlist__item {
+    padding: 10px;
+  }
+
+  .thumb-container {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+
+  .playlist__list {
+    width: 350px;
+    padding-top: 50px;
+  }
+
+  .playlist__item-details {
+    gap: 4px;
+  }
+
+  .playlist__item-duration {
+    font-size: 12px;
+  }
+
+  .playlist__item-name {
+    font-size: 14px;
+  }
+
+  .playlist__item-singer {
+    font-size: 12px;
+  }
+
+  .wave-container {
+    .bar {
+      width: 2px;
+      height: 10px;
+    }
   }
 }

@@ -16,6 +16,7 @@ const nextBtn = document.querySelector(".next-btn");
 const prevBtn = document.querySelector(".prev-btn");
 const currentTimeElement = document.querySelector(".current-time");
 const totalTimeElement = document.querySelector(".total-time");
+const playlistContainer = document.querySelector(".playlist");
 
 class MusicPlayer {
   constructor(songs, seekBar) {
@@ -446,6 +447,10 @@ shuffleBtn.addEventListener("click", () => {
 });
 player.initSong();
 
-const playlistContainer = document.querySelector(".playlist");
+const buttonList = document.querySelector(".icon-list");
+buttonList.addEventListener("click", () => {
+  playlistContainer.classList.add("show");
+});
+
 const playlist = document.querySelector(".playlist__list");
 new Scrollbar(playlistContainer, playlist);
