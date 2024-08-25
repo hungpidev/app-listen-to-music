@@ -449,6 +449,8 @@ player.initSong();
 const buttonList = document.querySelector(".icon-list");
 buttonList.addEventListener("click", () => {
   playlistContainer.classList.toggle("show");
+  buttonList.classList.toggle("active");
+  buttonList.style.transition = "all 0.25s linear";
 });
 
 const playlist = document.querySelector(".playlist__list");
