@@ -434,6 +434,9 @@ img {
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   }
+  .player .icon-list:active {
+    background-color: #7c7c7c;
+  }
 
   body {
     padding: 10px 0 !important;
@@ -441,20 +444,24 @@ img {
 
   .playlist {
     position: absolute;
-    bottom: -459px;
+    top: 0;
     z-index: 99;
+    opacity: 0;
+    visibility: hidden;
     height: calc(100% - 128px);
-    transform: translateY(0px);
-    transition: transform 0.5s linear;
+    transform: translateY(100%);
+    transition: all 0.6s ease-in-out;
   }
 
   .show {
-    transform: translateY(-587px);
-    transition: transform 0.5s linear;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: all 0.6s ease-in-out;
   }
 
   .playlist__item:hover {
-    background-color: #333;
+    background-color: none;
   }
 
   .song-image {
