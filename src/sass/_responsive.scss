@@ -39,11 +39,6 @@
   .playlist__item:hover {
     background-color: none;
   }
-
-
-  .song-image {
-    margin-top: 50px;
-  }
 }
 
 @media only screen and (max-width: 600px) {
@@ -70,10 +65,6 @@
 
   .controls {
     padding: 20px 0 10px 0;
-  }
-
-  .song-image {
-    margin-top: 50px;
   }
 
   .playlist__item {
