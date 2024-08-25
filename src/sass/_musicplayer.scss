@@ -7,13 +7,6 @@
   overflow: hidden;
   position: relative;
 
-  .icon-list {
-    opacity: 0;
-    visibility: hidden;
-    z-index: 99999;
-    position: absolute;
-  }
-
   &-content {
     width: 430px;
     display: flex;
@@ -116,4 +109,9 @@
 .play-btn {
   width: 60px;
   height: 60px;
+}
+
+.favorite-btn,
+.playlist-btn {
+  display: none;
 }
