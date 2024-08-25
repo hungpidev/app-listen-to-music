@@ -454,3 +454,58 @@ buttonList.addEventListener("click", () => {
 
 const playlist = document.querySelector(".playlist__list");
 new Scrollbar(playlistContainer, playlist);
+
+//
+const searchInput = document.querySelector(".search-input");
+const searchResults = document.querySelector(".search-results");
+
+function handleSearch() {
+  const query = searchInput.value.toLowerCase().trim();
+  searchResults.innerHTML = "";
+
+  if (query === "") {
+    searchResults.style.display = "none";
+    return;
+  }
+
+  const normalizedQuery = query
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+  const filteredSongs = musics
+    .filter((music) => {
+      const normalizedSongName = music.name
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+      return normalizedSongName.startsWith(normalizedQuery);
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  if (filteredSongs.length > 0) {
+    filteredSongs.forEach((song) => {
+      const resultItem = document.createElement("div");
+      resultItem.classList.add("result-item");
+
+      resultItem.innerHTML = `
+        <div class="result-thumb">
+          <img src="${song.image}" alt="${song.name}">
+        </div>
+        <div class="result-details">
+          <span class="result-name">${song.name}</span>
+          <span class="result-singer">${song.singer}</span>
+        </div>
+      `;
+
+      resultItem.onclick = () => player.selectSong(song.id - 1);
+      searchResults.appendChild(resultItem);
+    });
+
+    searchResults.style.display = "block";
+  } else {
+    searchResults.style.display = "none";
+  }
+}
+
+searchInput.addEventListener("input", handleSearch);
