@@ -12,6 +12,8 @@ export class Scrollbar {
 
     this.updateThumbSize();
     this.addEventListeners();
+    this.observeContentHeight();
+    this.observeContainerVisibility();
   }
 
   createScrollbar() {
@@ -50,6 +52,11 @@ export class Scrollbar {
     document.addEventListener("mouseup", this.onDragEnd.bind(this));
 
     this.content.addEventListener("scroll", () => {
+      if (!this.isContainerVisible()) {
+        this.hideScrollbarImmediately();
+        return;
+      }
+
       this.showScrollbar();
       this.updateThumbPosition();
 
@@ -61,6 +68,44 @@ export class Scrollbar {
       this.updateThumbSize();
       this.updateThumbPosition();
     });
+
+    // Lắng nghe sự kiện click để ẩn thanh cuộn ngay lập tức nếu container bị ẩn
+    document.addEventListener("click", () => {
+      if (!this.isContainerVisible()) {
+        this.hideScrollbarImmediately();
+      }
+    });
+  }
+
+  observeContentHeight() {
+    const resizeObserver = new ResizeObserver(() => {
+      if (!this.isContainerVisible()) {
+        this.hideScrollbarImmediately();
+        return;
+      }
+      this.updateThumbSize();
+      this.updateThumbPosition();
+    });
+
+    resizeObserver.observe(this.content);
+    resizeObserver.observe(this.container);
+  }
+
+  observeContainerVisibility() {
+    const observer = new MutationObserver(() => {
+      if (!this.isContainerVisible()) {
+        this.hideScrollbarImmediately();
+      }
+    });
+
+    observer.observe(this.container, {
+      attributes: true,
+      attributeFilter: ["style", "class"],
+    });
+  }
+
+  isContainerVisible() {
+    return window.getComputedStyle(this.container).display !== "none";
   }
 
   showScrollbar() {
@@ -79,7 +124,19 @@ export class Scrollbar {
     }
   }
 
+  hideScrollbarImmediately() {
+    clearTimeout(this.hideTimeout); // Xóa bỏ timeout nếu đang chạy
+    this.scrollbar.style.opacity = "0";
+    this.scrollbar.style.visibility = "hidden";
+    this.thumb.style.opacity = "0";
+    this.thumb.style.visibility = "hidden";
+  }
+
   onDragStart(event) {
+    if (!this.isContainerVisible()) {
+      this.hideScrollbarImmediately();
+      return;
+    }
     this.dragging = true;
     this.startY = event.clientY;
     this.startTop = parseInt(window.getComputedStyle(this.thumb).top, 10);

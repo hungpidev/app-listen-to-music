@@ -458,16 +458,16 @@ img {
 
 .search-results-container {
   width: 100%;
+  height: auto;
   position: absolute;
   z-index: 9;
 }
 
 .search-results {
-  position: absolute;
+  max-height: 350px;
+  width: 100%;
   background-color: #333;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  width: 100%;
-  max-height: 350px;
   overflow-y: auto;
 }
 .search-results::-webkit-scrollbar {

@@ -456,13 +456,19 @@ new Scrollbar(playlistContainer, playlist);
 
 const searchInput = document.querySelector(".search-input");
 const searchResults = document.querySelector(".search-results");
+const searchResultsContainer = document.querySelector(
+  ".search-results-container"
+);
+new Scrollbar(searchResultsContainer, searchResults);
 
 function handleSearch() {
+  const scrollBar = searchResultsContainer.querySelector(".custom-scrollbar");
   const query = searchInput.value.toLowerCase().trim();
   searchResults.innerHTML = "";
 
   if (query === "") {
     searchResults.style.display = "none";
+    scrollBar.style.display = "none";
     return;
   }
 
@@ -501,16 +507,19 @@ function handleSearch() {
     });
 
     searchResults.style.display = "block";
+    scrollBar.style.display = "block";
 
     document.querySelectorAll(".result-item").forEach((item) => {
       item.addEventListener("click", () => {
         const index = parseInt(item.getAttribute("data-index"), 10);
         player.selectSong(index);
         searchResults.style.display = "none";
+        scrollBar.style.display = "none";
       });
     });
   } else {
     searchResults.style.display = "none";
+    scrollBar.style.display = "none";
   }
 }
 
