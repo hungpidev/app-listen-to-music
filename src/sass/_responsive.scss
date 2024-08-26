@@ -25,23 +25,19 @@
   .playlist {
     position: absolute;
     top: 0;
-    z-index: 99;
-    opacity: 0;
-    visibility: hidden;
+    z-index: 10;
     height: calc(100% - 131px);
     transform: translateY(100%);
     transition: all 0.6s ease-in-out;
   }
 
   .show {
-    opacity: 1;
-    visibility: visible;
     transform: translateY(0);
     transition: all 0.6s ease-in-out;
   }
 
-  .playlist__item:hover {
-    background-color: none;
+  .playlist__item:not(.active-song):hover {
+    background-color: initial;
   }
 }
 

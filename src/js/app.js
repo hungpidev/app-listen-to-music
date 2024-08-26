@@ -9,6 +9,7 @@ import { loading, waveEffect } from "./effect/effect.js";
 const songName = document.querySelector(".song-name");
 const songSinger = document.querySelector(".song-singer");
 const songImage = document.querySelector(".song-image");
+const playlistElement = document.querySelector(".playlist__list");
 const playBtn = document.querySelector(".play-btn");
 const repeatBtn = document.querySelector(".repeat-btn");
 const shuffleBtn = document.querySelector(".shuffle-btn");
@@ -59,7 +60,6 @@ class MusicPlayer {
       }
     });
 
-    // Định nghĩa hàm handler cho sự kiện timeupdate
     this.updateProgressHandler = () => {
       this.updateProgress();
       this.updateTimeDisplay();
@@ -102,7 +102,6 @@ class MusicPlayer {
   }
 
   renderPlaylist() {
-    const playlistElement = document.querySelector(".playlist__list");
     playlistElement.innerHTML = this.songs
       .map(
         (song, index) =>
@@ -455,7 +454,6 @@ buttonList.addEventListener("click", () => {
 const playlist = document.querySelector(".playlist__list");
 new Scrollbar(playlistContainer, playlist);
 
-//
 const searchInput = document.querySelector(".search-input");
 const searchResults = document.querySelector(".search-results");
 
@@ -488,6 +486,8 @@ function handleSearch() {
       const resultItem = document.createElement("div");
       resultItem.classList.add("result-item");
 
+      resultItem.setAttribute("data-index", musics.indexOf(song));
+
       resultItem.innerHTML = `
         <div class="result-thumb">
           <img src="${song.image}" alt="${song.name}">
@@ -497,12 +497,18 @@ function handleSearch() {
           <span class="result-singer">${song.singer}</span>
         </div>
       `;
-
-      resultItem.onclick = () => player.selectSong(song.id - 1);
       searchResults.appendChild(resultItem);
     });
 
     searchResults.style.display = "block";
+
+    document.querySelectorAll(".result-item").forEach((item) => {
+      item.addEventListener("click", () => {
+        const index = parseInt(item.getAttribute("data-index"), 10);
+        player.selectSong(index);
+        searchResults.style.display = "none";
+      });
+    });
   } else {
     searchResults.style.display = "none";
   }
