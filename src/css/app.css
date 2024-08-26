@@ -547,6 +547,9 @@ img {
     transform: translateX(100%);
     transition: all 0.6s ease-in-out;
   }
+  .playlist__list {
+    border-left: none;
+  }
 
   .show {
     transform: translateX(0);
