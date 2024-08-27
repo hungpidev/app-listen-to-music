@@ -482,6 +482,9 @@ img {
   border-bottom: 1px solid #444;
   cursor: pointer;
 }
+.search .result-item:last-child {
+  border-bottom: none;
+}
 .search .result-item:hover {
   background-color: #444;
 }
@@ -517,10 +520,6 @@ img {
 }
 
 @media only screen and (max-width: 1024px) {
-  body {
-    padding: 3px 0 !important;
-  }
-
   .player {
     border-radius: 0;
   }
@@ -563,10 +562,6 @@ img {
   }
 }
 @media only screen and (max-width: 600px) {
-  body {
-    padding: 3px 0 !important;
-  }
-
   .player-content {
     width: 350px;
   }
@@ -634,7 +629,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  padding: 20px 0;
+  padding: 5px 0;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
