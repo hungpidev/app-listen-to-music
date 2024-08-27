@@ -5,6 +5,7 @@ import { SmoothScroller } from "./components/SmoothScroller.js";
 import { musics } from "./data/musics.js";
 import { pauseIcon, playIcon } from "./icon/icon.js";
 import { loading, waveEffect } from "./effect/effect.js";
+import { MusicSearch } from "./components/MusicSearch.js";
 
 const songName = document.querySelector(".song-name");
 const songSinger = document.querySelector(".song-singer");
@@ -461,62 +462,6 @@ const searchResultsContainer = document.querySelector(
 );
 new Scrollbar(searchResultsContainer, searchResults);
 
-function handleSearch() {
-  const query = searchInput.value.toLowerCase().trim();
-  searchResults.innerHTML = "";
+const musicSearch = new MusicSearch(searchInput, searchResults, musics, player);
 
-  if (query === "") {
-    searchResults.style.display = "none";
-    return;
-  }
-
-  const normalizedQuery = query
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
-
-  const filteredSongs = musics
-    .filter((music) => {
-      const normalizedSongName = music.name
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase();
-      return normalizedSongName.startsWith(normalizedQuery);
-    })
-    .sort((a, b) => a.name.localeCompare(b.name));
-
-  if (filteredSongs.length > 0) {
-    filteredSongs.forEach((song) => {
-      const resultItem = document.createElement("div");
-      resultItem.classList.add("result-item");
-
-      resultItem.setAttribute("data-index", musics.indexOf(song));
-
-      resultItem.innerHTML = `
-        <div class="result-thumb">
-          <img src="${song.image}" alt="${song.name}">
-        </div>
-        <div class="result-details">
-          <span class="result-name">${song.name}</span>
-          <span class="result-singer">${song.singer}</span>
-        </div>
-      `;
-      searchResults.appendChild(resultItem);
-    });
-
-    searchResults.style.display = "block";
-
-    document.querySelectorAll(".result-item").forEach((item) => {
-      item.addEventListener("click", () => {
-        const index = parseInt(item.getAttribute("data-index"), 10);
-        player.selectSong(index);
-        searchInput.value = "";
-        searchResults.style.display = "none";
-      });
-    });
-  } else {
-    searchResults.style.display = "none";
-  }
-}
-
-searchInput.addEventListener("input", handleSearch);
+searchInput.addEventListener("input", musicSearch);
