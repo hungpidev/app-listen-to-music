@@ -3,7 +3,14 @@ import { RippleEffect } from "./effect/RippleEffect.js";
 import { Scrollbar } from "./components/Scrollbar.js";
 import { SmoothScroller } from "./components/SmoothScroller.js";
 import { musics } from "./data/musics.js";
-import { pauseIcon, playIcon } from "./icon/icon.js";
+import {
+  muteIcon,
+  pauseIcon,
+  playIcon,
+  volumeHightIcon,
+  volumeLowIcon,
+  volumeMediumIcon,
+} from "./icon/icon.js";
 import { loading, waveEffect } from "./effect/effect.js";
 import { MusicSearch } from "./components/MusicSearch.js";
 
@@ -19,18 +26,22 @@ const prevBtn = document.querySelector(".prev-btn");
 const currentTimeElement = document.querySelector(".current-time");
 const totalTimeElement = document.querySelector(".total-time");
 const playlistContainer = document.querySelector(".playlist");
+const mute = document.querySelector(".mute");
+const volumeControls = document.querySelector(".volume-controls");
 
 class MusicPlayer {
-  constructor(songs, seekBar) {
+  constructor(songs, seekBar, volumekBar) {
     this.audio = new Audio();
     this.songs = songs;
     this.seekBar = seekBar;
+    this.volumekBar = volumekBar;
     this.currentIndex = 0;
     this.isPlaying = false;
     this.isRepeating = false;
     this.isShuffling = false;
     this.isDragging = false;
     this.playedSongs = [];
+    this.lastVolume = 1;
     this.initSong();
     this.loadState();
 
@@ -99,6 +110,28 @@ class MusicPlayer {
         this.isDragging = false;
       }
       this.audio.addEventListener("timeupdate", this.updateProgressHandler);
+    };
+
+    // volume
+
+    this.volumekBar.setRangeValue(this.audio.volume);
+
+    this.volumekBar.onInput = (value) => {
+      this.audio.volume = value;
+      if (value === 0) {
+        player.audio.muted = true;
+        mute.innerHTML = muteIcon;
+      } else if (value < 0.3) {
+        player.audio.muted = false;
+        mute.innerHTML = volumeLowIcon;
+      } else if (value < 0.6) {
+        player.audio.muted = false;
+        mute.innerHTML = volumeMediumIcon;
+      } else {
+        player.audio.muted = false;
+        mute.innerHTML = volumeHightIcon;
+      }
+      this.lastVolume = value > 0 ? value : this.lastVolume;
     };
   }
 
@@ -263,6 +296,8 @@ class MusicPlayer {
     }
     this.isPlaying = true;
     playBtn.innerHTML = pauseIcon;
+    volumeControls.style.opacity = 1;
+    volumeControls.style.visibility = "visible";
     this.activeWave();
   }
 
@@ -270,6 +305,8 @@ class MusicPlayer {
     this.audio.pause();
     this.isPlaying = false;
     playBtn.innerHTML = playIcon;
+    volumeControls.style.opacity = 0;
+    volumeControls.style.visibility = "hidden";
     this.activeWave();
   }
 
@@ -313,7 +350,6 @@ class MusicPlayer {
 
   shuffle() {
     if (this.playedSongs.length >= this.songs.length) {
-      console.log("All songs have been played");
       this.isShuffling = false;
       shuffleBtn.classList.remove("active");
       this.currentIndex = 0;
@@ -422,8 +458,13 @@ class MusicPlayer {
 }
 
 const seekBarElement = document.querySelector(".seek-bar");
+const volumeBarElement = document.querySelector(".volume-bar");
 const seekBar = new RangeControl(seekBarElement);
-const player = new MusicPlayer(musics, seekBar);
+const volumekBar = new RangeControl(volumeBarElement, {
+  maxValue: 1,
+  stepValue: 0.01,
+});
+const player = new MusicPlayer(musics, seekBar, volumekBar);
 
 playBtn.addEventListener("click", () => {
   player.togglePlaySong();
@@ -465,3 +506,18 @@ new Scrollbar(searchResultsContainer, searchResults);
 const musicSearch = new MusicSearch(searchInput, searchResults, musics, player);
 
 searchInput.addEventListener("input", musicSearch);
+
+mute.addEventListener("click", () => {
+  if (player.audio.muted) {
+    player.audio.muted = false;
+    player.volumekBar.currentValue = player.lastVolume;
+    player.audio.volume = player.lastVolume;
+  } else {
+    player.audio.muted = true;
+    player.lastVolume =
+      player.audio.volume > 0 ? player.audio.volume : player.lastVolume;
+    player.volumekBar.currentValue = 0;
+    player.audio.volume = 0;
+  }
+  player.volumekBar.setRangeValue(player.audio.volume);
+});

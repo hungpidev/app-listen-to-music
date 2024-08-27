@@ -1,5 +1,25 @@
 @media only screen and (max-width: 1024px) {
 
+  .slider-thumb {
+    opacity: 1;
+  }
+
+  .seek-bar {
+    height: 6px;
+
+    &:hover {
+      height: 6px;
+    }
+  }
+
+  .volume-bar {
+    height: 6px;
+
+    &:hover {
+      height: 6px;
+    }
+  }
+
   .player {
     border-radius: 0;
   }
@@ -51,10 +71,6 @@
 
   .seek-bar {
     max-width: 230px;
-  }
-
-  .slider-thumb {
-    opacity: 1;
   }
 
   .actions {

@@ -1,0 +1,52 @@
+ .mute {
+   margin-right: 15px;
+   background-color: #1f1f1f;
+   box-shadow: 0px 0px 6px 0px rgba(255, 255, 255, 0.12);
+ }
+
+ .volume {
+   &-controls {
+     position: absolute;
+     left: 10px;
+     bottom: 0;
+     margin-bottom: 10px;
+     display: flex;
+     align-items: center;
+     opacity: 0;
+     visibility: hidden;
+     transition: all 0.25s linear;
+
+     &:hover .volume-bar {
+       opacity: 1;
+       visibility: visible;
+     }
+   }
+
+   &-bar {
+     position: relative;
+     width: 150px;
+     height: 5px;
+     cursor: pointer;
+     display: flex;
+     align-items: center;
+     user-select: none;
+     opacity: 0;
+     visibility: hidden;
+     transition: all 0.25s linear;
+
+     &:active {
+       .slider-fill {
+         background-color: #01b74d;
+       }
+     }
+
+     &:hover {
+       height: 8px;
+
+       .slider-thumb {
+         opacity: 1;
+         visibility: visible;
+       }
+     }
+   }
+ }

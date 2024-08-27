@@ -76,7 +76,7 @@ export class Scrollbar {
       this.updateThumbPosition();
 
       clearTimeout(this.hideTimeout);
-      this.hideTimeout = setTimeout(() => this.hideScrollbar(), 1000);
+      this.hideTimeout = setTimeout(() => this.hideScrollbar(), 2000);
     });
 
     window.addEventListener("resize", () => {
@@ -197,6 +197,6 @@ export class Scrollbar {
   onDragEnd() {
     this.dragging = false;
     clearTimeout(this.hideTimeout);
-    this.hideTimeout = setTimeout(() => this.hideScrollbar(), 1000);
+    this.hideTimeout = setTimeout(() => this.hideScrollbar(), 2000);
   }
 }

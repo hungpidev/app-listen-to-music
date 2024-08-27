@@ -6,7 +6,7 @@ export class RangeControl {
     this.valueDisplay = options.valueDisplay || null;
     this.minValue = options.minValue || 0;
     this.maxValue = options.maxValue || 100;
-    this.stepValue = options.stepValue || 0.001;
+    this.stepValue = options.stepValue || 0.1;
     this.currentValue = options.initialValue || 0;
     this.isDragging = false;
     this.onDragStart = options.onDragStart || (() => {});
