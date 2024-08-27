@@ -461,6 +461,8 @@ img {
   height: auto;
   position: absolute;
   z-index: 9;
+  overflow: hidden;
+  border-radius: 10px;
 }
 
 .search-results {
