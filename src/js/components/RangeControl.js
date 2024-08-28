@@ -22,9 +22,7 @@ export class RangeControl {
     const percent =
       ((value - this.minValue) / (this.maxValue - this.minValue)) * 100;
 
-    this.thumb.style.left = `calc(${percent}% - ${
-      this.thumb.offsetWidth / 2
-    }px)`;
+    this.thumb.style.left = `calc(${percent}%`;
 
     this.fill.style.width = `${percent}%`;
 
