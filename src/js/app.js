@@ -244,10 +244,9 @@ class MusicPlayer {
       this.isRepeating = state.isRepeating;
       this.isShuffling = state.isShuffling;
 
-      this.audio.volume = state.volume !== undefined ? state.volume : 1; // Tải trạng thái âm lượng
-      this.audio.muted = state.muted !== undefined ? state.muted : false; // Tải trạng thái tắt âm
+      this.audio.volume = state.volume !== undefined ? state.volume : 1;
+      this.audio.muted = state.muted !== undefined ? state.muted : false;
 
-      // Cập nhật biểu tượng và thanh điều chỉnh âm lượng
       this.volumekBar.setRangeValue(this.audio.volume);
       if (this.audio.muted) {
         mute.innerHTML = muteIcon;

@@ -318,6 +318,7 @@ img {
 .mute {
   width: 40px;
   height: 40px;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -328,29 +329,47 @@ img {
 }
 
 .volume-bar-container {
-  padding-left: 5px;
-  padding-right: 20px;
-  border-radius: 15px;
-  display: none;
+  padding: 0;
+  width: 0;
+  opacity: 0;
+  visibility: hidden;
 }
 
 .volume-controls {
   position: absolute;
-  left: 10px;
-  bottom: 0;
-  margin-bottom: 10px;
   display: flex;
   align-items: center;
+  left: 10px;
+  bottom: 10px;
   opacity: 0;
   visibility: hidden;
   z-index: 3;
-  background-color: #1f1f1f;
-  box-shadow: 0px 0px 6px 0px rgba(255, 255, 255, 0.12);
   border-radius: 25px;
-  transition: all 0.25s linear;
+}
+.volume-controls:hover::before {
+  width: 100%;
 }
 .volume-controls:hover .volume-bar-container {
-  display: block;
+  width: auto;
+  padding-left: 5px;
+  padding-right: 20px;
+  opacity: 1;
+  visibility: visible;
+}
+.volume-controls:hover .volume-bar {
+  width: 150px;
+}
+.volume-controls::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 100%;
+  background-color: #1f1f1f;
+  box-shadow: 0px 0px 6px 0px rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  transition: width 0.25s linear;
 }
 .volume-controls .slider-bar {
   width: 100%;
@@ -381,13 +400,13 @@ img {
 }
 .volume-bar {
   position: relative;
-  width: 150px;
+  width: 0;
   height: 7px;
   cursor: pointer;
   display: flex;
   align-items: center;
   user-select: none;
-  transition: all 0.25s linear;
+  transition: width 0.25s linear;
 }
 .volume-bar:active .slider-fill {
   background-color: #01b74d;
@@ -602,6 +621,10 @@ img {
 }
 
 @media only screen and (max-width: 1024px) {
+  .volume-controls {
+    display: none;
+  }
+
   .slider-thumb {
     opacity: 1;
   }
