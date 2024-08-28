@@ -132,6 +132,7 @@ class MusicPlayer {
         mute.innerHTML = volumeHightIcon;
       }
       this.lastVolume = value > 0 ? value : this.lastVolume;
+      this.saveState();
     };
   }
 
@@ -230,6 +231,8 @@ class MusicPlayer {
       currentIndex: this.currentIndex,
       isRepeating: this.isRepeating,
       isShuffling: this.isShuffling,
+      volume: this.audio.volume,
+      muted: this.audio.muted,
     };
     localStorage.setItem("musicPlayerState", JSON.stringify(state));
   }
@@ -240,6 +243,25 @@ class MusicPlayer {
       this.currentIndex = state.currentIndex;
       this.isRepeating = state.isRepeating;
       this.isShuffling = state.isShuffling;
+
+      this.audio.volume = state.volume !== undefined ? state.volume : 1; // Tải trạng thái âm lượng
+      this.audio.muted = state.muted !== undefined ? state.muted : false; // Tải trạng thái tắt âm
+
+      // Cập nhật biểu tượng và thanh điều chỉnh âm lượng
+      this.volumekBar.setRangeValue(this.audio.volume);
+      if (this.audio.muted) {
+        mute.innerHTML = muteIcon;
+      } else {
+        if (this.audio.volume === 0) {
+          mute.innerHTML = muteIcon;
+        } else if (this.audio.volume < 0.3) {
+          mute.innerHTML = volumeLowIcon;
+        } else if (this.audio.volume < 0.6) {
+          mute.innerHTML = volumeMediumIcon;
+        } else {
+          mute.innerHTML = volumeHightIcon;
+        }
+      }
 
       repeatBtn.classList.toggle("active", this.isRepeating);
       shuffleBtn.classList.toggle("active", this.isShuffling);
@@ -520,4 +542,5 @@ mute.addEventListener("click", () => {
     player.audio.volume = 0;
   }
   player.volumekBar.setRangeValue(player.audio.volume);
+  player.saveState();
 });
