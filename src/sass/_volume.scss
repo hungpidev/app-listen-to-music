@@ -29,6 +29,7 @@
      visibility: hidden;
      z-index: 3;
      border-radius: 25px;
+     transition: all 0.25s linear;
 
      &:hover {
        &::before {

@@ -345,6 +345,7 @@ img {
   visibility: hidden;
   z-index: 3;
   border-radius: 25px;
+  transition: all 0.25s linear;
 }
 .volume-controls:hover::before {
   width: 100%;
