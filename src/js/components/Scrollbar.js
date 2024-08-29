@@ -168,12 +168,11 @@ export class Scrollbar {
     }
 
     this.dragging = true;
-    this.startY = event.clientY || event.touches[0].clientY;
+    this.startY = event.touches ? event.touches[0].clientY : event.clientY;
     this.startTop = parseInt(window.getComputedStyle(this.thumb).top, 10);
 
     document.addEventListener("mousemove", this.onDrag.bind(this));
     document.addEventListener("mouseup", this.onDragEnd.bind(this));
-
     document.addEventListener("touchmove", this.onDrag.bind(this), {
       passive: true,
     });
@@ -187,15 +186,16 @@ export class Scrollbar {
   onDrag(event) {
     if (!this.dragging || !this.scrollbar) return;
 
-    const currentY = event.clientY || event.touches[0].clientY;
-    const deltaY = currentY - this.startY;
+    const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+
+    const deltaY = clientY - this.startY;
+
     const thumbTop = Math.min(
       Math.max(this.startTop + deltaY, 0),
       this.container.clientHeight - this.thumb.clientHeight
     );
 
     this.thumb.style.top = `${thumbTop}px`;
-
     const scrollRatio =
       thumbTop / (this.container.clientHeight - this.thumb.clientHeight);
     this.content.scrollTop =
@@ -207,7 +207,6 @@ export class Scrollbar {
 
     document.removeEventListener("mousemove", this.onDrag.bind(this));
     document.removeEventListener("mouseup", this.onDragEnd.bind(this));
-
     document.removeEventListener("touchmove", this.onDrag.bind(this));
     document.removeEventListener("touchend", this.onDragEnd.bind(this));
 
