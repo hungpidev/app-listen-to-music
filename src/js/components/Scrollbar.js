@@ -14,7 +14,6 @@ export class Scrollbar {
     this.observeContentHeight();
     this.observeContainerVisibility();
   }
-
   createScrollbar() {
     if (!this.scrollbar) {
       this.scrollbar = document.createElement("div");
@@ -38,6 +37,8 @@ export class Scrollbar {
     }
 
     this.updateThumbSize();
+    this.showScrollbar();
+    setTimeout(() => this.hideScrollbar(), 2000);
   }
 
   updateThumbSize() {
