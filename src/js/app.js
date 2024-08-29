@@ -76,6 +76,7 @@ class MusicPlayer {
       this.updateProgress();
       this.updateTimeDisplay();
       this.updateSongDurationDisplay();
+      this.saveState();
     };
 
     this.audio.addEventListener("timeupdate", this.updateProgressHandler);
@@ -229,6 +230,7 @@ class MusicPlayer {
   saveState() {
     const state = {
       currentIndex: this.currentIndex,
+      currentTime: this.audio.currentTime,
       isRepeating: this.isRepeating,
       isShuffling: this.isShuffling,
       volume: this.audio.volume,
@@ -243,6 +245,8 @@ class MusicPlayer {
       this.currentIndex = state.currentIndex;
       this.isRepeating = state.isRepeating;
       this.isShuffling = state.isShuffling;
+
+      this.audio.currentTime = state.currentTime || 0;
 
       this.audio.volume = state.volume !== undefined ? state.volume : 1;
       this.audio.muted = state.muted !== undefined ? state.muted : false;
@@ -272,9 +276,9 @@ class MusicPlayer {
   }
 
   initSong() {
+    this.loadState();
     this.audio.src = this.getCurrentSong().path;
     this.updateSongDetails();
-    this.loadState();
     this.pauseSong();
     this.renderPlaylist();
     this.scrollActiveSongIntoView();
@@ -306,14 +310,7 @@ class MusicPlayer {
   playSong() {
     const playPromise = this.audio.play();
     if (playPromise !== undefined) {
-      playPromise
-        .then((_) => {})
-        .catch((_) => {
-          console.log(
-            `%cCó lẽ kết nối internet đang chạy marathon chậm rãi, nhưng ngón tay của bạn thì lại muốn về đích trước rồi!  🤣 🤣 🤣`,
-            "font-size: 30px; color: #73ff26;"
-          );
-        });
+      playPromise.then((_) => {}).catch((_) => {});
     }
     this.isPlaying = true;
     playBtn.innerHTML = pauseIcon;
