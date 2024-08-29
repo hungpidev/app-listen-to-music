@@ -13,6 +13,7 @@ import {
 } from "./icon/icon.js";
 import { loading, waveEffect } from "./effect/effect.js";
 import { MusicSearch } from "./components/MusicSearch.js";
+import { SecurityBlocker } from "./components/securityblocker.js";
 
 const songName = document.querySelector(".song-name");
 const songSinger = document.querySelector(".song-singer");
@@ -512,14 +513,12 @@ buttonList.addEventListener("click", () => {
 });
 
 const playlist = document.querySelector(".playlist__list");
-new Scrollbar(playlistContainer, playlist);
 
 const searchInput = document.querySelector(".search-input");
 const searchResults = document.querySelector(".search-results");
 const searchResultsContainer = document.querySelector(
   ".search-results-container"
 );
-new Scrollbar(searchResultsContainer, searchResults);
 
 const musicSearch = new MusicSearch(searchInput, searchResults, musics, player);
 
@@ -540,3 +539,8 @@ mute.addEventListener("click", () => {
   player.volumekBar.setRangeValue(player.audio.volume);
   player.saveState();
 });
+
+new Scrollbar(playlistContainer, playlist);
+new Scrollbar(searchResultsContainer, searchResults);
+
+// new SecurityBlocker();
