@@ -6,8 +6,9 @@ export class Scrollbar {
     this.thumb = null;
     this.dragging = false;
     this.hideTimeout = null;
+    this.startY = 0;
+    this.startTop = 0;
 
-    this.createScrollbar();
     this.addEventListeners();
     this.observeContentHeight();
     this.observeContainerVisibility();
@@ -23,6 +24,12 @@ export class Scrollbar {
 
       this.scrollbar.appendChild(this.thumb);
       this.container.appendChild(this.scrollbar);
+
+      this.scrollbar.addEventListener(
+        "mousedown",
+        this.onScrollbarClick.bind(this)
+      );
+      this.thumb.addEventListener("mousedown", this.onDragStart.bind(this));
     }
 
     this.updateThumbSize();
@@ -42,7 +49,6 @@ export class Scrollbar {
       30
     );
     this.thumb.style.height = `${thumbHeight}px`;
-    this.showScrollbar(); // Hiển thị thanh cuộn nếu có nội dung để cuộn
   }
 
   updateThumbPosition() {
@@ -55,34 +61,28 @@ export class Scrollbar {
     }
 
     const scrollTop = this.content.scrollTop;
-    const thumbTop = (scrollTop / contentHeight) * containerHeight;
+    const thumbTop =
+      (scrollTop / (contentHeight - containerHeight)) *
+      (containerHeight - this.thumb.clientHeight);
     this.thumb.style.top = `${thumbTop}px`;
   }
 
   addEventListeners() {
-    if (this.scrollbar) {
-      this.thumb.addEventListener("mousedown", this.onDragStart.bind(this));
-      document.addEventListener("mousemove", this.onDrag.bind(this));
-      document.addEventListener("mouseup", this.onDragEnd.bind(this));
-    }
-
     this.content.addEventListener("scroll", () => {
-      if (!this.isContainerVisible()) {
-        this.removeScrollbarFromDOM();
-        return;
+      if (!this.scrollbar) {
+        this.createScrollbar();
       }
-
-      this.createScrollbar();
       this.updateThumbPosition();
 
       clearTimeout(this.hideTimeout);
-      this.hideTimeout = setTimeout(() => this.hideScrollbar(), 2000);
+      this.hideTimeout = setTimeout(() => this.removeScrollbarFromDOM(), 2000);
     });
 
     window.addEventListener("resize", () => {
-      this.createScrollbar();
-      this.updateThumbSize();
-      this.updateThumbPosition();
+      if (this.scrollbar) {
+        this.updateThumbSize();
+        this.updateThumbPosition();
+      }
     });
 
     document.addEventListener("click", () => {
@@ -98,7 +98,9 @@ export class Scrollbar {
         this.removeScrollbarFromDOM();
         return;
       }
-      this.createScrollbar();
+      if (!this.scrollbar) {
+        this.createScrollbar();
+      }
       this.updateThumbSize();
       this.updateThumbPosition();
     });
@@ -114,7 +116,7 @@ export class Scrollbar {
 
       if (contentHeight <= containerHeight) {
         this.removeScrollbarFromDOM();
-      } else {
+      } else if (!this.scrollbar) {
         this.createScrollbar();
         this.updateThumbSize();
         this.updateThumbPosition();
@@ -129,6 +131,14 @@ export class Scrollbar {
 
   isContainerVisible() {
     return window.getComputedStyle(this.container).display !== "none";
+  }
+
+  removeScrollbarFromDOM() {
+    if (this.scrollbar && this.container.contains(this.scrollbar)) {
+      this.container.removeChild(this.scrollbar);
+      this.scrollbar = null;
+      this.thumb = null;
+    }
   }
 
   showScrollbar() {
@@ -149,37 +159,25 @@ export class Scrollbar {
     }
   }
 
-  hideScrollbarImmediately() {
-    if (this.scrollbar) {
-      clearTimeout(this.hideTimeout);
-      this.scrollbar.style.opacity = "0";
-      this.scrollbar.style.visibility = "hidden";
-      this.thumb.style.opacity = "0";
-      this.thumb.style.visibility = "hidden";
-    }
-  }
-
-  removeScrollbarFromDOM() {
-    if (this.scrollbar) {
-      this.container.removeChild(this.scrollbar);
-      this.scrollbar = null;
-      this.thumb = null;
-    }
-  }
-
   onDragStart(event) {
-    if (!this.isContainerVisible()) {
+    if (!this.isContainerVisible() || !this.scrollbar) {
       this.removeScrollbarFromDOM();
       return;
     }
+
     this.dragging = true;
     this.startY = event.clientY;
     this.startTop = parseInt(window.getComputedStyle(this.thumb).top, 10);
-    this.showScrollbar();
+
+    document.addEventListener("mousemove", this.onDrag.bind(this));
+    document.addEventListener("mouseup", this.onDragEnd.bind(this));
+
+    document.body.style.userSelect = "none";
   }
 
   onDrag(event) {
     if (!this.dragging || !this.scrollbar) return;
+
     const deltaY = event.clientY - this.startY;
     const thumbTop = Math.min(
       Math.max(this.startTop + deltaY, 0),
@@ -196,7 +194,36 @@ export class Scrollbar {
 
   onDragEnd() {
     this.dragging = false;
+
+    document.removeEventListener("mousemove", this.onDrag.bind(this));
+    document.removeEventListener("mouseup", this.onDragEnd.bind(this));
+
+    document.body.style.userSelect = "";
+
     clearTimeout(this.hideTimeout);
-    this.hideTimeout = setTimeout(() => this.hideScrollbar(), 2000);
+    this.hideTimeout = setTimeout(() => this.removeScrollbarFromDOM(), 2000);
+  }
+
+  onScrollbarClick(event) {
+    // Ensure click is not on the thumb itself
+    if (event.target !== this.scrollbar) return;
+
+    const containerRect = this.scrollbar.getBoundingClientRect();
+    const clickY = event.clientY - containerRect.top;
+    const thumbHeight = this.thumb.clientHeight;
+
+    const newThumbTop = Math.min(
+      Math.max(clickY - thumbHeight / 2, 0),
+      this.container.clientHeight - thumbHeight
+    );
+
+    this.thumb.style.top = `${newThumbTop}px`;
+
+    const scrollRatio =
+      newThumbTop / (this.container.clientHeight - thumbHeight);
+    this.content.scrollTop =
+      scrollRatio * (this.content.scrollHeight - this.container.clientHeight);
+
+    this.showScrollbar();
   }
 }

@@ -420,9 +420,6 @@ img {
   width: 12px;
   height: 100%;
   background-color: transparent;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 1s linear;
   user-select: none;
 }
 
@@ -433,9 +430,6 @@ img {
   position: absolute;
   cursor: pointer;
   user-select: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 1s linear;
 }
 
 .loader {
