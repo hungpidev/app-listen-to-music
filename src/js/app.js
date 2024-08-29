@@ -13,7 +13,7 @@ import {
 } from "./icon/icon.js";
 import { loading, waveEffect } from "./effect/effect.js";
 import { MusicSearch } from "./components/MusicSearch.js";
-import { SecurityBlocker } from "./components/SecurityBlocker.js";
+// import { SecurityBlocker } from "./components/SecurityBlocker.js";
 
 const songName = document.querySelector(".song-name");
 const songSinger = document.querySelector(".song-singer");
@@ -542,4 +542,4 @@ mute.addEventListener("click", () => {
 
 new Scrollbar(playlistContainer, playlist);
 new Scrollbar(searchResultsContainer, searchResults);
-new SecurityBlocker();
+// new SecurityBlocker();
