@@ -542,5 +542,3 @@ mute.addEventListener("click", () => {
 
 new Scrollbar(playlistContainer, playlist);
 new Scrollbar(searchResultsContainer, searchResults);
-
-// new SecurityBlocker();
