@@ -9,6 +9,7 @@ export class Scrollbar {
     this.startY = 0;
     this.startTop = 0;
 
+    this.createScrollbar();
     this.addEventListeners();
     this.observeContentHeight();
     this.observeContainerVisibility();
@@ -72,10 +73,11 @@ export class Scrollbar {
       if (!this.scrollbar) {
         this.createScrollbar();
       }
+      this.showScrollbar(); // Show scrollbar immediately when scrolling starts
       this.updateThumbPosition();
 
       clearTimeout(this.hideTimeout);
-      this.hideTimeout = setTimeout(() => this.removeScrollbarFromDOM(), 2000);
+      this.hideTimeout = setTimeout(() => this.hideScrollbar(), 2000);
     });
 
     window.addEventListener("resize", () => {
@@ -145,8 +147,6 @@ export class Scrollbar {
     if (this.scrollbar) {
       this.scrollbar.style.opacity = "1";
       this.scrollbar.style.visibility = "visible";
-      this.thumb.style.opacity = "1";
-      this.thumb.style.visibility = "visible";
     }
   }
 
@@ -154,8 +154,6 @@ export class Scrollbar {
     if (!this.dragging && this.scrollbar) {
       this.scrollbar.style.opacity = "0";
       this.scrollbar.style.visibility = "hidden";
-      this.thumb.style.opacity = "0";
-      this.thumb.style.visibility = "hidden";
     }
   }
 
@@ -201,11 +199,10 @@ export class Scrollbar {
     document.body.style.userSelect = "";
 
     clearTimeout(this.hideTimeout);
-    this.hideTimeout = setTimeout(() => this.removeScrollbarFromDOM(), 2000);
+    this.hideTimeout = setTimeout(() => this.hideScrollbar(), 2000);
   }
 
   onScrollbarClick(event) {
-    // Ensure click is not on the thumb itself
     if (event.target !== this.scrollbar) return;
 
     const containerRect = this.scrollbar.getBoundingClientRect();
