@@ -621,7 +621,7 @@ img {
     display: none;
   }
 
-  .slider-thumb {
+  .seek-bar .slider-thumb {
     opacity: 1;
   }
 

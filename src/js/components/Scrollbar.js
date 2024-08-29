@@ -31,6 +31,10 @@ export class Scrollbar {
         this.onScrollbarClick.bind(this)
       );
       this.thumb.addEventListener("mousedown", this.onDragStart.bind(this));
+
+      this.thumb.addEventListener("touchstart", this.onDragStart.bind(this), {
+        passive: true,
+      });
     }
 
     this.updateThumbSize();
@@ -73,7 +77,7 @@ export class Scrollbar {
       if (!this.scrollbar) {
         this.createScrollbar();
       }
-      this.showScrollbar(); // Show scrollbar immediately when scrolling starts
+      this.showScrollbar();
       this.updateThumbPosition();
 
       clearTimeout(this.hideTimeout);
@@ -164,11 +168,18 @@ export class Scrollbar {
     }
 
     this.dragging = true;
-    this.startY = event.clientY;
+    this.startY = event.clientY || event.touches[0].clientY;
     this.startTop = parseInt(window.getComputedStyle(this.thumb).top, 10);
 
     document.addEventListener("mousemove", this.onDrag.bind(this));
     document.addEventListener("mouseup", this.onDragEnd.bind(this));
+
+    document.addEventListener("touchmove", this.onDrag.bind(this), {
+      passive: true,
+    });
+    document.addEventListener("touchend", this.onDragEnd.bind(this), {
+      passive: true,
+    });
 
     document.body.style.userSelect = "none";
   }
@@ -176,7 +187,8 @@ export class Scrollbar {
   onDrag(event) {
     if (!this.dragging || !this.scrollbar) return;
 
-    const deltaY = event.clientY - this.startY;
+    const currentY = event.clientY || event.touches[0].clientY;
+    const deltaY = currentY - this.startY;
     const thumbTop = Math.min(
       Math.max(this.startTop + deltaY, 0),
       this.container.clientHeight - this.thumb.clientHeight
@@ -195,6 +207,9 @@ export class Scrollbar {
 
     document.removeEventListener("mousemove", this.onDrag.bind(this));
     document.removeEventListener("mouseup", this.onDragEnd.bind(this));
+
+    document.removeEventListener("touchmove", this.onDrag.bind(this));
+    document.removeEventListener("touchend", this.onDragEnd.bind(this));
 
     document.body.style.userSelect = "";
 
