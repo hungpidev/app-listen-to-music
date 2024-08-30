@@ -32,15 +32,15 @@
      border-radius: 20px;
      transition: all 0.25s linear;
 
-     &:hover {
-       width: 220px;
+     //  &:hover {
+     //    width: 220px;
 
-       .volume-bar {
-         width: 150px;
-         opacity: 1;
-         visibility: visible;
-       }
-     }
+     //    .volume-bar {
+     //      width: 150px;
+     //      opacity: 1;
+     //      visibility: visible;
+     //    }
+     //  }
 
      .slider {
        &-bar {

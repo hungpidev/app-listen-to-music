@@ -29,6 +29,7 @@ const totalTimeElement = document.querySelector(".total-time");
 const playlistContainer = document.querySelector(".playlist");
 const mute = document.querySelector(".mute");
 const volumeControls = document.querySelector(".volume-controls");
+const volumeBar = document.querySelector(".volume-bar");
 
 class MusicPlayer {
   constructor(songs, seekBar, volumekBar) {
@@ -56,7 +57,7 @@ class MusicPlayer {
       if (currentActiveWave) {
         currentActiveWave.classList.add("active-wave");
         currentActiveWave.innerHTML = loading;
-        currentActiveWave.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+        currentActiveWave.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
       }
     });
 
@@ -69,7 +70,7 @@ class MusicPlayer {
 
       if (currentActiveWave) {
         currentActiveWave.innerHTML = waveEffect;
-        currentActiveWave.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+        currentActiveWave.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
       }
     });
 
@@ -135,6 +136,46 @@ class MusicPlayer {
       }
       this.lastVolume = value > 0 ? value : this.lastVolume;
       this.saveState();
+    };
+
+    volumeControls.addEventListener("mouseover", () => {
+      if (!this.isDragging) {
+        volumeControls.style.width = "220px";
+        volumeBar.style.width = "150px";
+        volumeBar.style.opacity = 1;
+        volumeBar.style.visibility = "visible";
+      }
+    });
+
+    volumeControls.addEventListener("mouseout", () => {
+      if (!this.isDragging) {
+        volumeControls.style.width = "40px";
+        volumeBar.style.width = 0;
+        volumeBar.style.opacity = 0;
+        volumeBar.style.visibility = "hidden";
+      }
+    });
+
+    this.volumekBar.onDragStart = () => {
+      this.isDragging = true;
+      volumeControls.style.width = "220px";
+      volumeBar.style.width = "150px";
+      volumeBar.style.opacity = 1;
+      volumeBar.style.visibility = "visible";
+    };
+
+    this.volumekBar.onDragEnd = () => {
+      this.isDragging = false;
+      const hideVolumeControls = () => {
+        volumeControls.style.width = "40px";
+        volumeBar.style.width = 0;
+        volumeBar.style.opacity = 0;
+        volumeBar.style.visibility = "hidden";
+        document.removeEventListener("mousemove", hideVolumeControls);
+        document.removeEventListener("mouseup", hideVolumeControls);
+      };
+      document.addEventListener("mouseup", hideVolumeControls);
+      document.addEventListener("mousemove", hideVolumeControls);
     };
   }
 
