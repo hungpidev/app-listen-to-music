@@ -481,7 +481,7 @@ const volumeBarElement = document.querySelector(".volume-bar");
 const seekBar = new RangeControl(seekBarElement);
 const volumekBar = new RangeControl(volumeBarElement, {
   maxValue: 1,
-  stepValue: 0.01,
+  stepValue: 0.0001,
 });
 const player = new MusicPlayer(musics, seekBar, volumekBar);
 
