@@ -14,14 +14,12 @@
   align-items: center;
   user-select: none;
 
-  &:active {
+  &:hover {
+    height: 8px;
+
     .slider-fill {
       background-color: #01b74d;
     }
-  }
-
-  &:hover {
-    height: 8px;
 
     .slider-thumb {
       opacity: 1;

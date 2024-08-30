@@ -78,7 +78,7 @@
          position: absolute;
          top: 0;
          left: 0;
-         background-color: #ffffff;
+         background-color: #01b74d;
          user-select: none;
        }
 
@@ -105,11 +105,5 @@
      align-items: center;
      user-select: none;
      transition: width 0.25s linear;
-
-     &:active {
-       .slider-fill {
-         background-color: #01b74d;
-       }
-     }
    }
  }

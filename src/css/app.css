@@ -271,11 +271,11 @@ img {
   align-items: center;
   user-select: none;
 }
-.seek-bar:active .slider-fill {
-  background-color: #01b74d;
-}
 .seek-bar:hover {
   height: 8px;
+}
+.seek-bar:hover .slider-fill {
+  background-color: #01b74d;
 }
 .seek-bar:hover .slider-thumb {
   opacity: 1;
@@ -385,7 +385,7 @@ img {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: #ffffff;
+  background-color: #01b74d;
   user-select: none;
 }
 .volume-controls .slider-thumb {
@@ -408,9 +408,6 @@ img {
   align-items: center;
   user-select: none;
   transition: width 0.25s linear;
-}
-.volume-bar:active .slider-fill {
-  background-color: #01b74d;
 }
 
 .custom-scrollbar {
