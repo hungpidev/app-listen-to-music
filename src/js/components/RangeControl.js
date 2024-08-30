@@ -17,19 +17,21 @@ export class RangeControl {
   }
 
   setRangeValue(value, triggerInput = true) {
+    // Round to the nearest stepValue, with precision handling
     value = Math.round(value / this.stepValue) * this.stepValue;
     value = Math.max(this.minValue, Math.min(this.maxValue, value));
+
     const percent =
       ((value - this.minValue) / (this.maxValue - this.minValue)) * 100;
 
-    this.thumb.style.left = `calc(${percent}%`;
-
+    this.thumb.style.left = `calc(${percent}%)`;
     this.fill.style.width = `${percent}%`;
 
     if (this.valueDisplay) {
-      this.valueDisplay.textContent = value;
+      this.valueDisplay.textContent = value.toFixed(2);
     }
-    this.container.setAttribute("aria-valuenow", value);
+
+    this.container.setAttribute("aria-valuenow", value.toFixed(2));
     this.currentValue = value;
 
     if (triggerInput && this.onInput) {
@@ -39,6 +41,7 @@ export class RangeControl {
 
   init() {
     this.setRangeValue(this.currentValue, false);
+
     this.container.addEventListener("mousedown", this.startDragging.bind(this));
     this.container.addEventListener(
       "touchstart",
@@ -49,17 +52,17 @@ export class RangeControl {
   }
 
   getMouseValue(e) {
-    let rect = this.container.getBoundingClientRect();
-    let offsetX = e.clientX - rect.left;
-    let value =
+    const rect = this.container.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const value =
       this.minValue + (offsetX / rect.width) * (this.maxValue - this.minValue);
     return value;
   }
 
   getTouchValue(e) {
-    let rect = this.container.getBoundingClientRect();
-    let offsetX = e.touches[0].clientX - rect.left;
-    let value =
+    const rect = this.container.getBoundingClientRect();
+    const offsetX = e.touches[0].clientX - rect.left;
+    const value =
       this.minValue + (offsetX / rect.width) * (this.maxValue - this.minValue);
     return value;
   }
@@ -95,18 +98,18 @@ export class RangeControl {
     this.setRangeValue(this.getTouchValue(e));
   }
 
-  stopDragging(e) {
-    if (this.isDragging) {
-      if (this.onDragEnd) this.onDragEnd(this.currentValue);
+  stopDragging() {
+    if (this.isDragging && this.onDragEnd) {
+      this.onDragEnd(this.currentValue);
     }
     this.isDragging = false;
     document.removeEventListener("mousemove", this.onMouseMove.bind(this));
     document.removeEventListener("mouseup", this.stopDragging.bind(this));
   }
 
-  stopTouchDragging(e) {
-    if (this.isDragging) {
-      if (this.onDragEnd) this.onDragEnd(this.currentValue);
+  stopTouchDragging() {
+    if (this.isDragging && this.onDragEnd) {
+      this.onDragEnd(this.currentValue);
     }
     this.isDragging = false;
     document.removeEventListener("touchmove", this.onTouchMove.bind(this));
