@@ -13,6 +13,7 @@ import {
 } from "./icon/icon.js";
 import { loading, waveEffect } from "./effect/effect.js";
 import { MusicSearch } from "./components/MusicSearch.js";
+// import { ContextMenu } from "./components/ContextMenu.js";
 // import { SecurityBlocker } from "./components/SecurityBlocker.js";
 
 const songName = document.querySelector(".song-name");
@@ -162,20 +163,35 @@ class MusicPlayer {
       volumeBar.style.width = "150px";
       volumeBar.style.opacity = 1;
       volumeBar.style.visibility = "visible";
+
+      document.addEventListener("mouseup", this.onMouseUp);
+      document.addEventListener("mousemove", this.onMouseMove);
     };
 
     this.volumekBar.onDragEnd = () => {
       this.isDragging = false;
-      const hideVolumeControls = () => {
+
+      document.removeEventListener("mouseup", this.onMouseUp);
+      document.removeEventListener("mousemove", this.onMouseMove);
+
+      if (!volumeControls.matches(":hover")) {
         volumeControls.style.width = "40px";
         volumeBar.style.width = 0;
         volumeBar.style.opacity = 0;
         volumeBar.style.visibility = "hidden";
-        document.removeEventListener("mousemove", hideVolumeControls);
-        document.removeEventListener("mouseup", hideVolumeControls);
-      };
-      document.addEventListener("mouseup", hideVolumeControls);
-      document.addEventListener("mousemove", hideVolumeControls);
+      }
+    };
+
+    this.onMouseUp = () => {
+      this.isDragging = false;
+      document.removeEventListener("mouseup", this.onMouseUp);
+
+      if (!volumeControls.matches(":hover")) {
+        volumeControls.style.width = "40px";
+        volumeBar.style.width = 0;
+        volumeBar.style.opacity = 0;
+        volumeBar.style.visibility = "hidden";
+      }
     };
   }
 
@@ -522,7 +538,6 @@ const volumeBarElement = document.querySelector(".volume-bar");
 const seekBar = new RangeControl(seekBarElement);
 const volumekBar = new RangeControl(volumeBarElement, {
   maxValue: 1,
-  stepValue: 0.01,
 });
 const player = new MusicPlayer(musics, seekBar, volumekBar);
 

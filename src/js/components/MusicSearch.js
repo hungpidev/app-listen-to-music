@@ -10,6 +10,12 @@ export class MusicSearch {
 
   init() {
     this.searchInput.addEventListener("input", () => this.handleSearch());
+
+    // Hiển thị lại kết quả tìm kiếm khi input được focus
+    this.searchInput.addEventListener("focus", () => this.handleFocus());
+
+    // Ẩn kết quả tìm kiếm khi click ra ngoài
+    document.addEventListener("click", (event) => this.handleBlur(event));
   }
 
   handleSearch() {
@@ -84,5 +90,21 @@ export class MusicSearch {
     this.player.selectSong(index);
     this.searchInput.value = "";
     this.searchResults.style.display = "none";
+  }
+
+  handleFocus() {
+    if (this.searchInput.value.trim() !== "") {
+      this.searchResults.style.display = "block";
+    }
+  }
+
+  handleBlur(event) {
+    // Kiểm tra xem click có xảy ra bên ngoài searchInput và searchResults không
+    if (
+      !this.searchInput.contains(event.target) &&
+      !this.searchResults.contains(event.target)
+    ) {
+      this.searchResults.style.display = "none";
+    }
   }
 }

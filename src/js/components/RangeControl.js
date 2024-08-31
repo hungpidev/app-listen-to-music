@@ -6,7 +6,6 @@ export class RangeControl {
     this.valueDisplay = options.valueDisplay || null;
     this.minValue = options.minValue || 0;
     this.maxValue = options.maxValue || 100;
-    this.stepValue = options.stepValue || 0.1;
     this.currentValue = options.initialValue || 0;
     this.isDragging = false;
     this.onDragStart = options.onDragStart || (() => {});
@@ -17,14 +16,12 @@ export class RangeControl {
   }
 
   setRangeValue(value, triggerInput = true) {
-    // Round to the nearest stepValue, with precision handling
-    value = Math.round(value / this.stepValue) * this.stepValue;
     value = Math.max(this.minValue, Math.min(this.maxValue, value));
 
     const percent =
       ((value - this.minValue) / (this.maxValue - this.minValue)) * 100;
 
-    this.thumb.style.left = `calc(${percent}%)`;
+    this.thumb.style.left = `${percent}%`;
     this.fill.style.width = `${percent}%`;
 
     if (this.valueDisplay) {
@@ -117,10 +114,11 @@ export class RangeControl {
   }
 
   handleKeyDown(e) {
+    const increment = (this.maxValue - this.minValue) / 100;
     if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
-      this.setRangeValue(this.currentValue - this.stepValue);
+      this.setRangeValue(this.currentValue - increment);
     } else if (e.key === "ArrowRight" || e.key === "ArrowUp") {
-      this.setRangeValue(this.currentValue + this.stepValue);
+      this.setRangeValue(this.currentValue + increment);
     }
   }
 }
