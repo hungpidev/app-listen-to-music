@@ -703,4 +703,20 @@ export const musics = [
     duration: "03:10",
     id: 88,
   },
+  {
+    name: "Nếu Biết Đó Là Lần Cuối",
+    singer: "Đức Trường, BMZ",
+    path: "../../../music/Nếu Biết Đó Là Lần Cuối.mp3",
+    image: "../../../images/Nếu Biết Đó Là Lần Cuối.jpg",
+    duration: "04:00",
+    id: 89,
+  },
+  {
+    name: "Yên Bình Có Quá Đắt Không",
+    singer: "Khiem",
+    path: "../../../music/Yên Bình Có Quá Đắt Không.mp3",
+    image: "../../../images/Yên Bình Có Quá Đắt Không.jpg",
+    duration: "04:08",
+    id: 90,
+  },
 ];

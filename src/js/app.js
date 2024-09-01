@@ -30,7 +30,7 @@ const totalTimeElement = document.querySelector(".total-time");
 const playlistContainer = document.querySelector(".playlist");
 const mute = document.querySelector(".mute");
 const volumeControls = document.querySelector(".volume-controls");
-const volumeBar = document.querySelector(".volume-bar");
+const volumeBarContainer = document.querySelector(".volume-bar-container");
 
 class MusicPlayer {
   constructor(songs, seekBar, volumekBar) {
@@ -141,28 +141,28 @@ class MusicPlayer {
 
     volumeControls.addEventListener("mouseover", () => {
       if (!this.isDragging) {
-        volumeControls.style.width = "220px";
-        volumeBar.style.width = "150px";
-        volumeBar.style.opacity = 1;
-        volumeBar.style.visibility = "visible";
+        volumeControls.style.height = "220px";
+        volumeBarContainer.style.height = "150px";
+        volumeBarContainer.style.opacity = 1;
+        volumeBarContainer.style.visibility = "visible";
       }
     });
 
     volumeControls.addEventListener("mouseout", () => {
       if (!this.isDragging) {
-        volumeControls.style.width = "40px";
-        volumeBar.style.width = 0;
-        volumeBar.style.opacity = 0;
-        volumeBar.style.visibility = "hidden";
+        volumeControls.style.height = "40px";
+        volumeBarContainer.style.height = 0;
+        volumeBarContainer.style.opacity = 0;
+        volumeBarContainer.style.visibility = "hidden";
       }
     });
 
     this.volumekBar.onDragStart = () => {
       this.isDragging = true;
-      volumeControls.style.width = "220px";
-      volumeBar.style.width = "150px";
-      volumeBar.style.opacity = 1;
-      volumeBar.style.visibility = "visible";
+      volumeControls.style.height = "220px";
+      volumeBarContainer.style.height = "150px";
+      volumeBarContainer.style.opacity = 1;
+      volumeBarContainer.style.visibility = "visible";
 
       document.addEventListener("mouseup", this.onMouseUp);
       document.addEventListener("mousemove", this.onMouseMove);
@@ -175,10 +175,10 @@ class MusicPlayer {
       document.removeEventListener("mousemove", this.onMouseMove);
 
       if (!volumeControls.matches(":hover")) {
-        volumeControls.style.width = "40px";
-        volumeBar.style.width = 0;
-        volumeBar.style.opacity = 0;
-        volumeBar.style.visibility = "hidden";
+        volumeControls.style.height = "40px";
+        volumeBarContainer.style.height = 0;
+        volumeBarContainer.style.opacity = 0;
+        volumeBarContainer.style.visibility = "hidden";
       }
     };
 
@@ -187,10 +187,10 @@ class MusicPlayer {
       document.removeEventListener("mouseup", this.onMouseUp);
 
       if (!volumeControls.matches(":hover")) {
-        volumeControls.style.width = "40px";
-        volumeBar.style.width = 0;
-        volumeBar.style.opacity = 0;
-        volumeBar.style.visibility = "hidden";
+        volumeControls.style.height = "40px";
+        volumeBarContainer.style.height = 0;
+        volumeBarContainer.style.opacity = 0;
+        volumeBarContainer.style.visibility = "hidden";
       }
     };
   }
@@ -538,6 +538,7 @@ const volumeBarElement = document.querySelector(".volume-bar");
 const seekBar = new RangeControl(seekBarElement);
 const volumekBar = new RangeControl(volumeBarElement, {
   maxValue: 1,
+  isVertical: true,
 });
 const player = new MusicPlayer(musics, seekBar, volumekBar);
 

@@ -11,6 +11,7 @@ export class RangeControl {
     this.onDragStart = options.onDragStart || (() => {});
     this.onDragEnd = options.onDragEnd || (() => {});
     this.onInput = options.onInput || (() => {});
+    this.isVertical = options.isVertical || false;
 
     this.init();
   }
@@ -21,14 +22,19 @@ export class RangeControl {
     const percent =
       ((value - this.minValue) / (this.maxValue - this.minValue)) * 100;
 
-    this.thumb.style.left = `${percent}%`;
-    this.fill.style.width = `${percent}%`;
-
-    if (this.valueDisplay) {
-      this.valueDisplay.textContent = value.toFixed(2);
+    if (this.isVertical) {
+      this.thumb.style.bottom = `${percent}%`;
+      this.fill.style.height = `${percent}%`;
+    } else {
+      this.thumb.style.left = `${percent}%`;
+      this.fill.style.width = `${percent}%`;
     }
 
-    this.container.setAttribute("aria-valuenow", value.toFixed(2));
+    if (this.valueDisplay) {
+      this.valueDisplay.textContent = value;
+    }
+
+    this.container.setAttribute("aria-valuenow", value);
     this.currentValue = value;
 
     if (triggerInput && this.onInput) {
@@ -50,17 +56,23 @@ export class RangeControl {
 
   getMouseValue(e) {
     const rect = this.container.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
+    const offset = this.isVertical
+      ? rect.bottom - e.clientY
+      : e.clientX - rect.left;
+    const dimension = this.isVertical ? rect.height : rect.width;
     const value =
-      this.minValue + (offsetX / rect.width) * (this.maxValue - this.minValue);
+      this.minValue + (offset / dimension) * (this.maxValue - this.minValue);
     return value;
   }
 
   getTouchValue(e) {
     const rect = this.container.getBoundingClientRect();
-    const offsetX = e.touches[0].clientX - rect.left;
+    const offset = this.isVertical
+      ? rect.bottom - e.touches[0].clientY
+      : e.touches[0].clientX - rect.left;
+    const dimension = this.isVertical ? rect.height : rect.width;
     const value =
-      this.minValue + (offsetX / rect.width) * (this.maxValue - this.minValue);
+      this.minValue + (offset / dimension) * (this.maxValue - this.minValue);
     return value;
   }
 

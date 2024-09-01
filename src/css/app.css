@@ -324,68 +324,65 @@ img {
   color: #fff;
   border-radius: 50%;
   cursor: pointer;
-  transition: all 0.3s linear;
-}
-
-.volume-bar-container {
-  position: absolute;
-  left: 50px;
+  transition: all 0.25s linear;
+  margin-top: auto;
 }
 
 .volume-controls {
   width: 40px;
   height: 40px;
   position: absolute;
-  display: flex;
-  align-items: center;
   left: 10px;
   bottom: 10px;
-  opacity: 0;
-  visibility: hidden;
-  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background-color: #1f1f1f;
   box-shadow: 0px 0px 6px 0px rgba(255, 255, 255, 0.12);
   border-radius: 20px;
   transition: all 0.25s linear;
-}
-.volume-controls .slider-bar {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  background-color: #444;
-  border-radius: 10px;
   overflow: hidden;
 }
-.volume-controls .slider-fill {
-  height: 100%;
+.volume-controls .volume-bar-container {
   position: absolute;
-  top: 0;
-  left: 0;
-  background-color: #01b74d;
-  user-select: none;
-}
-.volume-controls .slider-thumb {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: #ffffff;
-  position: absolute;
-  transform: translateX(-50%);
-  cursor: pointer;
-  user-select: none;
-  transition: opacity 0.25s linear;
-}
-.volume-bar {
-  position: relative;
-  width: 0;
-  height: 7px;
+  bottom: 50px;
+  width: 7px;
+  height: 0;
+  transition: all 0.25s linear;
   opacity: 0;
   visibility: hidden;
+}
+.volume-controls .volume-bar {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+}
+.volume-controls .slider-bar {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #444;
+  border-radius: inherit;
+}
+.volume-controls .slider-fill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50%;
+  background-color: #01b74d;
+}
+.volume-controls .slider-thumb {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  width: 16px;
+  height: 16px;
+  background-color: #fff;
+  border-radius: 50%;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  user-select: none;
-  transition: all 0.25s linear;
 }
 
 .custom-scrollbar {
