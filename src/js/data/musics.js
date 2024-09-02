@@ -727,4 +727,12 @@ export const musics = [
     duration: "03:40",
     id: 91,
   },
+  {
+    name: "Cứ Chill Thôi",
+    singer: "Chillies, SUNI Hạ Linh, Rhymastic",
+    path: "../../../music/Cứ Chill Thôi.mp3",
+    image: "../../../images/Cứ Chill Thôi.jpg",
+    duration: "04:30",
+    id: 92,
+  },
 ];
