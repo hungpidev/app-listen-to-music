@@ -1,66 +1,67 @@
 export class ContextMenu {
   constructor() {
-    this.menuElement = null; // Biến lưu trữ menu
-    this.currentScrollElement = null; // Phần tử hiện tại lắng nghe sự kiện scroll
-    this.scrollHandler = this.hideMenu.bind(this); // Hàm xử lý scroll để ẩn menu
-    this.initEvents(); // Khởi tạo sự kiện chung
+    this.menuElement = null; // DOM element for the menu
+    this.currentScrollElement = null; // Element currently listening to scroll
+    this.scrollHandler = this.hideMenu.bind(this); // Scroll handler to hide the menu
+    this.initEvents(); // Initialize common events
   }
 
-  createMenu(menuItems) {
+  createMenu(content) {
     if (!this.menuElement) {
       this.menuElement = document.createElement("div");
       this.menuElement.classList.add("context-menu");
       document.body.appendChild(this.menuElement);
     }
 
-    this.renderMenu(menuItems);
+    this.renderContent(content);
   }
 
-  renderMenu(menuItems) {
+  renderContent(content) {
     if (!this.menuElement) return;
 
+    // Clear previous content
     this.menuElement.innerHTML = "";
 
-    menuItems.forEach((item) => {
-      const menuItemElement = document.createElement("div");
-      menuItemElement.classList.add("context-menu-item");
-      menuItemElement.textContent = item.label;
-
-      if (item.action) {
-        menuItemElement.addEventListener("click", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          item.action();
-          this.hideMenu();
-        });
-      }
-
-      this.menuElement.appendChild(menuItemElement);
-    });
+    if (typeof content === "string") {
+      // If the content is a string, set it directly as inner HTML
+      this.menuElement.innerHTML = content;
+    } else if (content instanceof HTMLElement) {
+      // If the content is an HTML element, append it
+      this.menuElement.appendChild(content);
+    } else if (Array.isArray(content)) {
+      // If the content is an array of elements, append each
+      content.forEach((item) => {
+        if (item instanceof HTMLElement) {
+          this.menuElement.appendChild(item);
+        } else if (typeof item === "string") {
+          this.menuElement.innerHTML += item;
+        }
+      });
+    }
   }
 
   initEvents() {
-    // Sự kiện click trên document để ẩn menu
+    // Click event on document to hide menu
     document.addEventListener("click", (e) => {
       if (this.menuElement && !this.menuElement.contains(e.target)) {
         this.hideMenu();
       }
     });
 
-    // Sự kiện phím "Escape" để ẩn menu
+    // "Escape" key event to hide menu
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") this.hideMenu();
     });
 
-    // Sự kiện thay đổi kích thước cửa sổ để ẩn menu
+    // Window resize event to hide menu
     window.addEventListener("resize", () => this.hideMenu());
 
-    // Sự kiện scroll trên window để ẩn menu
+    // Scroll event on window to hide menu
     window.addEventListener("scroll", () => this.hideMenu());
   }
 
   attachScrollEvent(element) {
-    // Gỡ bỏ sự kiện scroll khỏi phần tử trước đó
+    // Remove scroll event from the previous element
     if (this.currentScrollElement) {
       this.currentScrollElement.removeEventListener(
         "scroll",
@@ -68,7 +69,7 @@ export class ContextMenu {
       );
     }
 
-    // Cập nhật phần tử hiện tại và thêm sự kiện scroll mới
+    // Update the current element and add a new scroll event
     this.currentScrollElement = element;
 
     if (this.currentScrollElement) {
@@ -76,12 +77,12 @@ export class ContextMenu {
     }
   }
 
-  showMenu(e, menuItems, scrollElement) {
-    this.createMenu(menuItems);
+  showMenu(e, content, scrollElement) {
+    this.createMenu(content);
     this.menuElement.style.display = "block";
     this.adjustPosition(e);
 
-    // Đính kèm sự kiện scroll cho phần tử được chỉ định
+    // Attach scroll event to the specified element
     this.attachScrollEvent(scrollElement);
   }
 
@@ -94,7 +95,7 @@ export class ContextMenu {
     const scrollY = window.scrollY;
 
     const margin = 20;
-    const offset = 15;
+    const offset = 1;
 
     let left = e.clientX + scrollX + offset;
     let top = e.clientY + scrollY + offset;
@@ -122,10 +123,12 @@ export class ContextMenu {
 
   hideMenu() {
     if (this.menuElement) {
-      this.menuElement.style.display = "none";
+      // Remove menu from the DOM
+      this.menuElement.remove();
+      this.menuElement = null;
     }
 
-    // Gỡ bỏ sự kiện scroll khi menu bị ẩn
+    // Remove scroll event when menu is hidden
     if (this.currentScrollElement) {
       this.currentScrollElement.removeEventListener(
         "scroll",
@@ -135,31 +138,3 @@ export class ContextMenu {
     }
   }
 }
-
-// const contextMenu = new ContextMenu();
-
-// const menuConfigurations = {
-//   song: [
-//     { label: "Play", action: () => console.log("Play clicked") },
-//     {
-//       label: "Add to Playlist",
-//       action: () => console.log("Add to Playlist clicked"),
-//     },
-//     { label: "Remove", action: () => console.log("Remove clicked") },
-//   ],
-// };
-
-// function handleContextMenu(e, type, scrollElement) {
-//   e.preventDefault();
-//   const menuItems = menuConfigurations[type] || [];
-//   contextMenu.showMenu(e, menuItems, scrollElement);
-// }
-
-// const songItems = document.querySelectorAll(".playlist__item");
-// songItems.forEach((songItem) => {
-//   songItem.addEventListener("contextmenu", (e) =>
-//     handleContextMenu(e, "song", playlistElement)
-//   );
-// });
-
-// songImage.addEventListener("contextmenu", (e) => handleContextMenu(e, "song"));

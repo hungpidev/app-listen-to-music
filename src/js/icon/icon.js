@@ -4,3 +4,7 @@ export const volumeHightIcon = `<i class="fa-light fa-volume-high"></i>`;
 export const volumeMediumIcon = `<i class="fa-light fa-volume"></i>`;
 export const volumeLowIcon = `<i class="fa-light fa-volume-low"></i>`;
 export const muteIcon = `<i class="fa-light fa-volume-xmark"></i>`;
+export const downloadIcon = `<i class="fa-regular fa-arrow-down-to-line"></i>`;
+export const goBackIcon = `<i class="fa-sharp fa-regular fa-arrow-left"></i>`;
+export const goForwardIcon = `<i class="fa-sharp fa-regular fa-arrow-right"></i>`;
+export const reloadPageIcon = `<i class="fa-regular fa-arrow-rotate-right"></i>`;

@@ -4,16 +4,20 @@ import { Scrollbar } from "./components/Scrollbar.js";
 import { SmoothScroller } from "./components/SmoothScroller.js";
 import { musics } from "./data/musics.js";
 import {
+  downloadIcon,
+  goBackIcon,
+  goForwardIcon,
   muteIcon,
   pauseIcon,
   playIcon,
+  reloadPageIcon,
   volumeHightIcon,
   volumeLowIcon,
   volumeMediumIcon,
 } from "./icon/icon.js";
 import { loading, waveEffect } from "./effect/effect.js";
 import { MusicSearch } from "./components/MusicSearch.js";
-// import { ContextMenu } from "./components/ContextMenu.js";
+import { ContextMenu } from "./components/ContextMenu.js";
 // import { SecurityBlocker } from "./components/SecurityBlocker.js";
 
 const songName = document.querySelector(".song-name");
@@ -600,3 +604,72 @@ mute.addEventListener("click", () => {
 new Scrollbar(playlistContainer, playlist);
 new Scrollbar(searchResultsContainer, searchResults);
 // new SecurityBlocker();
+const contextMenu = new ContextMenu();
+
+const songItems = document.querySelectorAll(".playlist__item");
+songItems.forEach((songItem, index) => {
+  songItem.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+
+    // Function to create a menu item with an icon
+    function createMenuItem(iconElement, label, action) {
+      const menuItem = document.createElement("div");
+      menuItem.classList.add("menu-item");
+
+      // Create icon element
+      const icon = document.createElement("div");
+      icon.classList.add("menu-item-icon");
+      icon.innerHTML = iconElement;
+
+      // Create label element
+      const text = document.createElement("span");
+      text.textContent = label;
+      text.classList.add("menu-item-text");
+
+      // Append icon and label to menu item
+      menuItem.appendChild(icon);
+      menuItem.appendChild(text);
+
+      // Attach action to menu item click
+      menuItem.addEventListener("click", (e) => {
+        action();
+        contextMenu.hideMenu();
+      });
+
+      return menuItem;
+    }
+
+    // Get the current song object
+    const currentSong = player.songs[index];
+
+    // Define menu items with icons
+    const content = [
+      createMenuItem(goBackIcon, "Quay lại", goBack),
+      createMenuItem(goForwardIcon, "Tiếp theo", goForward),
+      createMenuItem(reloadPageIcon, "Tải lại trang", reloadPage),
+      createMenuItem(downloadIcon, "Tải xuống", () =>
+        downloadSong(currentSong)
+      ),
+    ];
+
+    contextMenu.showMenu(e, content, playlistElement);
+  });
+});
+
+// Define actions for each menu item
+const goBack = () => {
+  console.log("Go back action");
+};
+const goForward = () => {
+  console.log("Go forward action");
+};
+const reloadPage = () => {
+  console.log("Reload page action");
+};
+const downloadSong = (currentSong) => {
+  const link = document.createElement("a");
+  link.href = currentSong.path;
+  link.download = currentSong.name;
+  link.target = "_blank";
+  link.click();
+};
