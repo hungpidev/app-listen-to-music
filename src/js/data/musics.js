@@ -735,4 +735,12 @@ export const musics = [
     duration: "04:30",
     id: 92,
   },
+  {
+    name: "Đi Về Nhà",
+    singer: "Đen, JustaTee",
+    path: "../../../music/Đi Về Nhà.mp3",
+    image: "../../../images/Đi Về Nhà.jpg",
+    duration: "04:30",
+    id: 93,
+  },
 ];
