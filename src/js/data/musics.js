@@ -719,4 +719,12 @@ export const musics = [
     duration: "04:08",
     id: 90,
   },
+  {
+    name: "Ngày Đẹp Trời Để Nói Chia Tay",
+    singer: "Lou Hoàng",
+    path: "../../../music/Ngày Đẹp Trời Để Nói Chia Tay.mp3",
+    image: "../../../images/Ngày Đẹp Trời Để Nói Chia Tay.jpg",
+    duration: "03:40",
+    id: 91,
+  },
 ];
